@@ -1,0 +1,40 @@
+:root{
+    /* COLOR */
+    --light-foregroundText: '#000000';
+    --light-backgroundCell: '#FFFFFF';
+    --light-inputs: '#ECECEC';
+    --light-secondary1: '#9B51E0';
+
+    /* SHADOWS */
+    --box-shadow-black: "0px 47px 19px rgba(0, 0, 0, 0.01), 0px 26px 16px rgba(0, 0, 0, 0.05), 0px 12px 12px rgba(0, 0, 0, 0.09), 0px 3px 6px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1)";
+
+    /* BORDER RADIUS */
+    --border-radius-large: 20px;
+    --border-radius-medium: 20px;
+    --border-radius-small: 8px;
+    --border-radius-full: 50em;
+
+    /* TYPOGRAPHY */
+    /* FONT FAMILY */
+    --fonts-body: SFRounded, ui-rounded, \\"SF Pro Rounded\\", -apple-system, BlinkMacSystemFont, \\"Segoe UI\\", Roboto, Helvetica, Arial, sans-serif, \\"Apple Color Emoji\\", \\"Segoe UI Emoji\\", \\"Segoe UI Symbol\\";
+    /* FONT WEIGHTS */
+    --font-weight-headings: 700;
+    --font-weight-body: 500;
+}
+@media only screen and (min-width: 720px) {
+    :root{
+        /* BORDER RADIUS */
+        /* --border-radius-large: 20px;
+        --border-radius-medium: 20px;
+        --border-radius-small: 8px; */
+    }
+}
+@media only screen and (min-width: 1024px) {
+    :root{
+
+        /* BORDER RADIUS */
+        /* --border-radius-large: 20px;
+        --border-radius-medium: 20px;
+        --border-radius-small: 8px; */
+    }
+}

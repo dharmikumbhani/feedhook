@@ -26,7 +26,7 @@ interface IFeedhook {
     /*
      * @dev Emitted when a DApp registers themselves with the Feedhook contract.
      */
-    event Registered(address indexed dapp, string name, address indexed registar);
+    event Registered(address indexed dapp, string name, address indexed registerer);
 
     /*
      * @dev Emitted when a DApp unregisters themselves with the Feedhook contract.
@@ -56,6 +56,6 @@ interface IFeedhook {
      * @param RegisterDappData The data required to register a DApp. See RegisterDappData struct.
      */
 
-    function registerDapp(RegisterDappData calldata _data) external;
+    function registerDapp(address _dapp, string calldata name, address _registerer) external;
 
 }

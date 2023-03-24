@@ -35,25 +35,33 @@ contract Feedhook is IFeedhook {
         return schemaRegistry;
     }
 
-    function registerDapp(RegisterDappData calldata _data) external {
+    function registerDapp(address _dapp, string calldata _name, address _registerer) external {
         // DApp must not be registered already
-        if (registeredDapps[_data.dapp].dapp != address(0)) {
+        if (registeredDapps[_dapp].dapp != address(0)) {
             revert DappAlreadyRegistered();
         }
 
         // DApp or Registrar address must not be zero
-        if (_data.dapp == address(0) || _data.registerer == address(0)) {
+        if (_dapp == address(0) || _registerer == address(0)) {
             revert ZeroAddress();
         }
 
+        RegisterDappData memory _data = RegisterDappData({
+            registerer: _registerer,
+            dapp: _dapp,
+            name: _name
+        });
         // Register the DApp
-        registeredDapps[_data.dapp] = _data;
+        registeredDapps[_dapp] = _data;
 
         // Emit event
-        emit Registered(_data.dapp, _data.name, _data.registerer);
+        emit Registered(_dapp, _name, _registerer);
     }
 
     function getRegisteredDapp(address _dapp) external view returns (RegisterDappData memory) {
+        if (registeredDapps[_dapp].dapp == address(0)) {
+            revert UnregisteredDapp();
+        }
         return registeredDapps[_dapp];
     }
 

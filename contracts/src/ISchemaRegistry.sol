@@ -18,7 +18,7 @@ interface ISchemaRegistry {
     /**
      * @dev Emitted when a schema is registered.
      */
-     event SchemaRegistered(bytes32 indexed uid, address registerer, address resolver, bool revocable, string schema);
+    event SchemaRegistered(bytes32 indexed uid, address registerer, address resolver, bool revocable, string schema);
     /**
      * @dev Registers a schema with the registry.
      * @param schema The schema to register.
@@ -26,12 +26,6 @@ interface ISchemaRegistry {
      * @return uid The unique identifier of the schema.
      */
     function registerSchema(string calldata schema, address resolver, bool revocable) external returns (bytes32 uid);
-
-    /**
-     * @notice Revokes a schema from the registry.
-     * @param uid The unique identifier of the schema.
-     */
-    function revokeSchema(bytes32 uid) external;
 
     /**
      * @notice Gets a schema record from the registry.

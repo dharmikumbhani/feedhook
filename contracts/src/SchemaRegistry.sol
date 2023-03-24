@@ -6,6 +6,7 @@ import {ISchemaRegistry, SchemaRecord} from "./ISchemaRegistry.sol";
 import "forge-std/console.sol";
 // Errors
 error SchemaAlreadyRegistered();
+error SchemaNotRegistered();
 contract SchemaRegistry is ISchemaRegistry {
     // State
     mapping(bytes32 => SchemaRecord) private schemaRegistry;
@@ -32,12 +33,10 @@ contract SchemaRegistry is ISchemaRegistry {
         return uid;
     }
 
-    // TODO: Implement revokeSchema
-    function revokeSchema(bytes32 uid) external {
-
-    }
-
     function getSchema(bytes32 uid) external view returns (SchemaRecord memory record) {
+        if(schemaRegistry[uid].uid == bytes32(0)) {
+            revert SchemaNotRegistered();
+        }
         return schemaRegistry[uid];
     }
 

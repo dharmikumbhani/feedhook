@@ -20,6 +20,7 @@ contract SchemaRegistryTest is Test {
         vm.label(alice, "alice");
     }
 
+    // Test registerSchema: Event Emit and Return Value
     function test_registerSchema() public {
         string memory schema = "{text: string, number: uint256}";
         address resolver = alice;
@@ -38,6 +39,7 @@ contract SchemaRegistryTest is Test {
         assertEq(schemaUid, uid);
     }
 
+    // Test getSchema: Return Value
     function test_getSchema() public {
         string memory schema = "{text: string, number: uint256}";
         address resolver = alice;
@@ -55,7 +57,8 @@ contract SchemaRegistryTest is Test {
         assertEq(schemaRegistry.getSchema(schemaUid).revocable, revocable);
     }
 
-    function testFail_registerSchemaRevert() public {
+    // Test_Fail registerSchema: SchemaAlreadyRegistered
+    function testFail_registerSchema_SchemaAlreadyRegistered() public {
         // Register Schema First Time
         string memory schema = "{text: string, number: uint256}";
         address resolver = alice;
@@ -71,5 +74,22 @@ contract SchemaRegistryTest is Test {
         // Try registering the same schema again
         vm.expectRevert("SchemaAlreadyRegistered");
         schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
+    }
+
+    // Test_Fail getSchema: SchemaNotFound
+    function testFail_getSchema_SchemaNotFound() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
+        });
+        bytes32 uid = keccak256(abi.encodePacked(data.schema, data.resolver, data.revocable));
+        // Did not register the schema
+        vm.expectRevert("SchemaNotFound");
+        schemaRegistry.getSchema(bytes32(uid));
     }
 }

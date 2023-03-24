@@ -1,3 +1,84 @@
-.class{
-    background-color: aqua;
+@import url(./reset.css);
+@import url(./globals.css);
+.flex-horizontal{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.cta-widget-button {
+    width: 100%;
+    border-radius: var(--border-radius-small);
+    background-color: var(--light-secondary1);
+    padding: var(--padding-button);
+    color: white;
+    font-family: var(--fonts-body);
+    font-weight: var(--font-weight-body);
+    margin-inline: var(--margin-xs);
+}
+
+/* text area input */
+.text-area-input {
+    border-radius: var(--border-radius-medium);
+    width: 100%;
+    padding: var(--padding-button);
+    height: 100px;
+    border: 2px solid var(--light-inputs);
+    text-align: start;
+    font-family: var(--fonts-body);
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-body);
+}
+
+/* Modal heading */
+.modal-heading {
+    font-family: var(--fonts-body);
+    font-weight: var(--font-weight-headings);
+    font-size: var(--font-size-m);
+    text-align: center;
+}
+
+/* Close Button */
+.close-button {
+    border-radius: var(--border-radius-full);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+.close-button:hover {
+    background-color: rgb(236, 236, 236, 0.5);
+    transition: all 0.1s ease-out;
+}
+
+/* Footer */
+.footer-text {
+    /* margin-left: var(--margin-xs); */
+    opacity: var(--opacity-50);
+    font-weight: var(--font-weight-body);
+    font-size: var(--font-size-xs);
+}
+.feedhook-logo-container {
+    width: 16px;
+    opacity: var(--opacity-80);
+    box-sizing: border-box;
+    padding: 2px;
+    margin-right: 2px;
+}
+.widget-container {
+    position: relative;
+    background-color: white;
+    padding: 16px 16px 8px 16px;
+    box-shadow: var(--box-shadow-black);
+    width: 100%;
+    border-radius: var(--border-radius-medium);
+    max-width: 350px;
+}
+.widget-container > h1, .widget-container > .buttons-container {
+    margin-bottom: calc(var(--margin-s)*2);
 }

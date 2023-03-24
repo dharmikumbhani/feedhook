@@ -1,25 +1,44 @@
 :root{
     /* COLOR */
-    --light-foregroundText: '#000000';
-    --light-backgroundCell: '#FFFFFF';
-    --light-inputs: '#ECECEC';
-    --light-secondary1: '#9B51E0';
+    --light-foregroundText: #000000;
+    --light-backgroundCell: #FFFFFF;
+    --light-inputs: #ECECEC;
+    --light-secondary1: #2563EB;
+
+    /* OPACITY */
+    --opacity-50: 0.5;
+    --opacity-80: 0.8;
+    --opacity-100: 1;
 
     /* SHADOWS */
-    --box-shadow-black: "0px 47px 19px rgba(0, 0, 0, 0.01), 0px 26px 16px rgba(0, 0, 0, 0.05), 0px 12px 12px rgba(0, 0, 0, 0.09), 0px 3px 6px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1)";
+    --box-shadow-black: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 
     /* BORDER RADIUS */
     --border-radius-large: 20px;
-    --border-radius-medium: 20px;
+    --border-radius-medium: 12px;
     --border-radius-small: 8px;
     --border-radius-full: 50em;
 
+    /* PADDING */
+    --padding-button: 8px;
+
+    /* MARGIN */
+    --margin-l: 24px;
+    --margin-m: 16px;
+    --margin-s: 12px;
+    --margin-xs: 8px;
+
     /* TYPOGRAPHY */
     /* FONT FAMILY */
-    --fonts-body: SFRounded, ui-rounded, \\"SF Pro Rounded\\", -apple-system, BlinkMacSystemFont, \\"Segoe UI\\", Roboto, Helvetica, Arial, sans-serif, \\"Apple Color Emoji\\", \\"Segoe UI Emoji\\", \\"Segoe UI Symbol\\";
+    --fonts-body: SFRounded, ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     /* FONT WEIGHTS */
     --font-weight-headings: 700;
+    --font-weight-sub-headings: 600;
     --font-weight-body: 500;
+    /* FONT SIZE */
+    --font-size-l: 20px;
+    --font-size-m: 16px;
+    --font-size-xs: 12px;
 }
 @media only screen and (min-width: 720px) {
     :root{
@@ -37,4 +56,14 @@
         --border-radius-medium: 20px;
         --border-radius-small: 8px; */
     }
+}
+
+p {
+    font-family: var(--fonts-body);
+    font-weight: 500;
+}
+
+button:hover {
+    scale: 1.01;
+    transition: all 0.1s ease-in;
 }

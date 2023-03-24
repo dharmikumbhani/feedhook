@@ -11,6 +11,14 @@ struct SchemaRecord {
     bool revocable; // Whether the schema allows revocations explicitly.
     string schema; // Custom specification of the schema (e.g., an ABI).
 }
+
+struct SchemaAttestation {
+    bytes32 schemaUID; // The unique identifier of the schema.
+    address about; // The address of the subject of the attestation.
+    bytes32 key; // The key of the attestation.
+    bytes data; // The data of the attestation.
+    address attester; // The address of the attester.
+}
 interface ISchemaRegistry {
 
     // Events
@@ -18,7 +26,12 @@ interface ISchemaRegistry {
     /**
      * @dev Emitted when a schema is registered.
      */
-    event SchemaRegistered(bytes32 indexed uid, address registerer, address resolver, bool revocable, string schema);
+    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address indexed resolver, bool revocable, string schema);
+    /**
+     * @dev Emitted when a schema attestation is submitted.
+     * @notice about, key and attester are indexed to retrieve the attestation[attester][about][key] from AttestationStation.sol
+     */
+    event SchemaAttestationSubmitted(bytes32 schemaUID, address indexed about, bytes32 indexed key, bytes data, address indexed attester);
     /**
      * @dev Registers a schema with the registry.
      * @param schema The schema to register.
@@ -33,4 +46,19 @@ interface ISchemaRegistry {
      * @return record The schema record.
      */
     function getSchema(bytes32 uid) external view returns (SchemaRecord memory record);
+    
+    /**
+     * @notice Submits a schema attestation to AttestationStation.sol
+     * @param _request The schema attestation request.
+     */
+    function submitSchemaAttestation(SchemaAttestation calldata _request) external;
+
+    /**
+     * @notice Gets a attestation from AttestationStation.sol, converts it to a SchemaAttestation struct and returns it.
+     * @param _attester The address of the attester.
+     * @param _about The address of the subject of the attestation.
+     * @param _key The key of the attestation.
+     * @return The schema attestation.
+     */
+    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestation memory);
 }

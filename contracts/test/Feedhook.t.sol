@@ -34,7 +34,7 @@ contract FeedhookTest is Test {
         attestationStation = new AttestationStation();
 
         // Deploy Contracts
-        schemaRegistry = new SchemaRegistry();
+        schemaRegistry = new SchemaRegistry(address(attestationStation));
         feedhook = new Feedhook(schemaRegistry, address(attestationStation));
     }
 

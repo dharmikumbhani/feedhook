@@ -18,7 +18,6 @@ contract Feedhook is IFeedhook {
     // State
     ISchemaRegistry public schemaRegistry;
     address public immutable OP_ATTESTATION_STATION;
-    AttestationStation public atst;
     // Registry of DApps
     mapping(address => RegisterDappData) private registeredDapps; 
 
@@ -27,7 +26,6 @@ contract Feedhook is IFeedhook {
     constructor(ISchemaRegistry _schemaRegistry, address _opAttestationStation) {
         schemaRegistry = _schemaRegistry;
         OP_ATTESTATION_STATION = _opAttestationStation;
-        atst = AttestationStation(_opAttestationStation);
     }
 
     // Functions

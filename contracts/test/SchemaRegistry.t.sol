@@ -2,18 +2,19 @@ pragma solidity 0.8.15;
 
 import "forge-std/Test.sol";
 import "../src/SchemaRegistry.sol";
-import {ISchemaRegistry, SchemaRecord} from "../src/ISchemaRegistry.sol";
+import "../src/AttestationStation/AttestationStation.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestation, SchemaAttestation} from "../src/ISchemaRegistry.sol";
 
 contract SchemaRegistryTest is Test {
     SchemaRegistry public schemaRegistry;
     address bob = address(128);
     address alice = address(256);
-
     // Events
-    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address resolver, bool revocable, string schema);
-    
+    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address indexed resolver, bool revocable, string schema);
+    event SchemaAttestationSubmitted(bytes32 schemaUID, address indexed about, bytes32 indexed key, bytes data, address indexed attester);
     function setUp() public {
-        schemaRegistry = new SchemaRegistry();
+        AttestationStation atst = new AttestationStation();
+        schemaRegistry = new SchemaRegistry(address(atst));
         vm.deal(bob, 1 ether);
         vm.deal(alice, 1 ether);
         vm.label(bob, "bob");
@@ -92,4 +93,113 @@ contract SchemaRegistryTest is Test {
         vm.expectRevert("SchemaNotFound");
         schemaRegistry.getSchema(bytes32(uid));
     }
+
+    // Test submitSchemaAttestation: Return Value
+    function test_submitSchemaAttestation() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
+        });
+        bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
+        // SchemaAttestation
+        SchemaAttestation memory request = SchemaAttestation({
+            schemaUID: schemaUid,
+            data: "{text: 'test', number 1}",
+            about: address(200),
+            key: bytes32("test"),
+            attester: bob
+        });
+        vm.prank(bob);
+        vm.expectEmit(true, true, true, false, address(schemaRegistry));
+        emit SchemaAttestationSubmitted(schemaUid, request.about, request.key, request.data, request.attester);
+        schemaRegistry.submitSchemaAttestation(request);
+    }
+
+    // Test_Fail submitSchemaAttestation: SchemaNotFound
+    // Command: forge test --match-test testFail_submitSchemaAttestation_SchemaNotFound
+    function testFail_submitSchemaAttestation_SchemaNotFound() public {
+        // SchemaAttestation
+        SchemaAttestation memory request = SchemaAttestation({
+            schemaUID: bytes32(0),
+            data: "{text: 'test', number 1}",
+            about: address(200),
+            key: bytes32("test"),
+            attester: bob
+        });
+        vm.prank(bob);
+        vm.expectRevert("SchemaNotFound");
+        schemaRegistry.submitSchemaAttestation(request);
+    }
+
+    // Test getSchemaAttetation: Return Value
+    // Command: forge test --match-test test_getSchemaAttestation
+    function test_getSchemaAttestation() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
+        });
+        // Register Schema
+        bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
+        // SchemaAttestation
+        SchemaAttestation memory request = SchemaAttestation({
+            schemaUID: schemaUid,
+            data: "{text: 'test', number 1}",
+            about: address(200),
+            key: bytes32("test"),
+            attester: bob
+        });
+        vm.prank(bob);
+        // Submit Attestation
+        schemaRegistry.submitSchemaAttestation(request);
+
+        // Get Attestation
+        SchemaAttestation memory attestation = schemaRegistry.getSchemaAttestation(request.attester, request.about, request.key);
+        assertEq(attestation.schemaUID, schemaUid);
+        assertEq(attestation.data, request.data);
+        assertEq(attestation.about, request.about);
+    }
+
+    // Test_Fail getSchemaAttestation: AttestationNotFound
+    // Command: forge test --match-test testFail_getSchemaAttestation_AttestationNotFound
+    function testFail_getSchemaAttestation_AttestationNotFound() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
+        });
+        // Register Schema
+        bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
+        // SchemaAttestation
+        SchemaAttestation memory request = SchemaAttestation({
+            schemaUID: schemaUid,
+            data: "{text: 'test', number 1}",
+            about: address(200),
+            key: bytes32("test"),
+            attester: bob // bob is the attester
+        });
+        vm.prank(bob);
+        // Submit Attestation
+        schemaRegistry.submitSchemaAttestation(request);
+
+        // Get Attestation
+        vm.expectRevert("AttestationNotFound");
+        // Attempting to get attestation from alice
+        schemaRegistry.getSchemaAttestation(alice, request.about, request.key);
+    }
+
+
 }

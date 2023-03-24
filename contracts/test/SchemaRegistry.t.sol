@@ -6,52 +6,70 @@ import {ISchemaRegistry, SchemaRecord} from "../src/ISchemaRegistry.sol";
 
 contract SchemaRegistryTest is Test {
     SchemaRegistry public schemaRegistry;
+    address bob = address(128);
+    address alice = address(256);
 
     // Events
-    event SchemaRegistered(bytes32 indexed uid, address registrar);
+    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address resolver, bool revocable, string schema);
     
     function setUp() public {
         schemaRegistry = new SchemaRegistry();
+        vm.deal(bob, 1 ether);
+        vm.deal(alice, 1 ether);
+        vm.label(bob, "bob");
+        vm.label(alice, "alice");
     }
 
     function test_registerSchema() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
         SchemaRecord memory data = SchemaRecord({
             uid: bytes32(0),
-            schema: "Test Schema",
-            resolver: address(0x798e39A31d8a49729C0057B4059A4Dc19e00C431),
-            revocable: true
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
         });
         bytes32 uid = keccak256(abi.encodePacked(data.schema, data.resolver, data.revocable));
-        vm.expectEmit(true, true, false, true, address(schemaRegistry));
-        emit SchemaRegistered(uid, address(0));
+        vm.expectEmit(true, true, true, true, address(schemaRegistry));
+        emit SchemaRegistered(uid, bob, data.resolver, data.revocable, data.schema);
+        vm.prank(bob);
         bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
         assertEq(schemaUid, uid);
     }
 
     function test_getSchema() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
         SchemaRecord memory data = SchemaRecord({
             uid: bytes32(0),
-            schema: "Test Schema",
-            resolver: address(0x798e39A31d8a49729C0057B4059A4Dc19e00C431),
-            revocable: true
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
         });
         bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
-        assertEq(schemaRegistry.getSchema(schemaUid).schema, "Test Schema");
-        assertEq(schemaRegistry.getSchema(schemaUid).resolver, address(0x798e39A31d8a49729C0057B4059A4Dc19e00C431));
-        assertEq(schemaRegistry.getSchema(schemaUid).revocable, true);
+        assertEq(schemaRegistry.getSchema(schemaUid).uid, schemaUid);
+        assertEq(schemaRegistry.getSchema(schemaUid).schema, schema);
+        assertEq(schemaRegistry.getSchema(schemaUid).resolver, resolver);
+        assertEq(schemaRegistry.getSchema(schemaUid).revocable, revocable);
     }
 
     function testFail_registerSchemaRevert() public {
+        // Register Schema First Time
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
         SchemaRecord memory data = SchemaRecord({
             uid: bytes32(0),
-            schema: "Test Schema",
-            resolver: address(0x798e39A31d8a49729C0057B4059A4Dc19e00C431),
-            revocable: true
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
         });
         bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
 
         // Try registering the same schema again
-        vm.expectRevert("SchemaAlreadyRegistere");
+        vm.expectRevert("SchemaAlreadyRegistered");
         schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
     }
 }

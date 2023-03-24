@@ -3,7 +3,7 @@
 pragma solidity 0.8.15;
 
 import {ISchemaRegistry, SchemaRecord} from "./ISchemaRegistry.sol";
-
+import "forge-std/console.sol";
 // Errors
 error SchemaAlreadyRegistered();
 contract SchemaRegistry is ISchemaRegistry {
@@ -27,7 +27,7 @@ contract SchemaRegistry is ISchemaRegistry {
         record.uid = uid;
         schemaRegistry[uid] = record;
 
-        emit SchemaRegistered(uid, address(0));
+        emit SchemaRegistered(uid, msg.sender, resolver, revocable, schema);
 
         return uid;
     }

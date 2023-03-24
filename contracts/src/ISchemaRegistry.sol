@@ -18,7 +18,7 @@ interface ISchemaRegistry {
     /**
      * @dev Emitted when a schema is registered.
      */
-     event SchemaRegistered(bytes32 indexed uid, address registrar);
+     event SchemaRegistered(bytes32 indexed uid, address registerer, address resolver, bool revocable, string schema);
     /**
      * @dev Registers a schema with the registry.
      * @param schema The schema to register.

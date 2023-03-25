@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.15;
 
-import {ISchemaRegistry, SchemaRecord, SchemaAttestation} from "./ISchemaRegistry.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestation, AttestationData} from "./ISchemaRegistry.sol";
 
 // Errors
 error SchemaAlreadyRegistered();
@@ -53,23 +53,43 @@ contract SchemaRegistry is ISchemaRegistry {
 
     // submitAttestation
     function submitSchemaAttestation(SchemaAttestation calldata _request) external {
-        // Check if the schema is registered
-        if(schemaRegistry[_request.schemaUID].uid == bytes32(0)) {
-            revert SchemaNotRegistered();
-        }
+
+        SchemaAttestation[] memory _requests = new SchemaAttestation[](1);
+        _requests[0] = _request;
         // Submit the attestation to AttestationStation.sol
-        _submitSchemaAttestation(_request);
-        emit SchemaAttestationSubmitted(_request.schemaUID, _request.about, _request.key, _request.data, _request.attester);
+        _submitSchemaAttestation(_requests);
     }
 
-    function _submitSchemaAttestation(SchemaAttestation memory _request) private {
-        bytes memory value = abi.encode(_request.schemaUID, _request.data, _request.attester);
-        // Make delegate call to AttestationStation.sol
-        (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _request.about, _request.key, value));
-        if(!success) {
-            revert AttestationFailed();
+    function _submitSchemaAttestation(SchemaAttestation[] memory _requests) private {
+
+        for(uint256 i = 0; i < _requests.length; ) {
+            if(schemaRegistry[_requests[i].schemaUID].uid == bytes32(0)) {
+                revert SchemaNotRegistered();
+            }
+
+            bytes memory value = abi.encode(_requests[i].schemaUID, _requests[i].data, _requests[i].attester);
+
+
+            (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _requests[i].about, _requests[i].key, value));
+            
+            if(!success) {
+                revert AttestationFailed();
+            }
+
+            emit SchemaAttestationSubmitted(_requests[i].schemaUID, _requests[i].about, _requests[i].key, _requests[i].data, _requests[i].attester);
+
+            unchecked {
+                ++i;
+            }
         }
     }
+
+    // multiSubmitSchemaAttestation
+    function multiSubmitSchemaAttestation(SchemaAttestation[] calldata _requests) external {
+        // Submit the attestation to AttestationStation.sol
+        _submitSchemaAttestation(_requests);
+    }
+
 
     // getSchemaAttestation
     function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestation memory) {

@@ -94,7 +94,8 @@ contract SchemaRegistryTest is Test {
         schemaRegistry.getSchema(bytes32(uid));
     }
 
-    // Test submitSchemaAttestation: Return Value
+    // Test submitSchemaAttestation_single: Return Value
+    // Command: forge test --match-test test_submitSchemaAttestation 
     function test_submitSchemaAttestation() public {
         string memory schema = "{text: string, number: uint256}";
         address resolver = alice;
@@ -118,6 +119,40 @@ contract SchemaRegistryTest is Test {
         vm.expectEmit(true, true, true, false, address(schemaRegistry));
         emit SchemaAttestationSubmitted(schemaUid, request.about, request.key, request.data, request.attester);
         schemaRegistry.submitSchemaAttestation(request);
+    }
+
+    // Test submitSchemaAttestation_multiple: Return Value
+    // Command: forge test --match-test test_multiSubmitSchemaAttestation
+    function test_multiSubmitSchemaAttestation() public {
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable
+        });
+        // Register Schema
+        bytes32 schemaUid = schemaRegistry.registerSchema(data.schema, data.resolver, data.revocable);
+
+        // Submit multiple attestations
+        SchemaAttestation[] memory requests = new SchemaAttestation[](10);
+        for (uint256 i = 0; i < 10; i++) {
+            // SchemaAttestation
+            SchemaAttestation memory request = SchemaAttestation({
+                schemaUID: schemaUid,
+                data: "{text: 'test', number 1}",
+                about: address(200),
+                key: bytes32("test"),
+                attester: bob
+            });
+            requests[i] = request;
+        }
+        vm.prank(bob);
+        vm.expectEmit(true, true, true, false, address(schemaRegistry));
+        emit SchemaAttestationSubmitted(schemaUid, requests[1].about, requests[1].key, requests[1].data, requests[1].attester);
+        schemaRegistry.multiSubmitSchemaAttestation(requests);
     }
 
     // Test_Fail submitSchemaAttestation: SchemaNotFound

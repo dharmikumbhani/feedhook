@@ -19,6 +19,13 @@ struct SchemaAttestation {
     bytes data; // The data of the attestation.
     address attester; // The address of the attester.
 }
+
+struct AttestationData {
+    address about;
+    bytes32 key;
+    bytes val;
+}
+
 interface ISchemaRegistry {
 
     // Events

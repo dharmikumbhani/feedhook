@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.15;
 
-import {ISchemaRegistry, SchemaRecord, SchemaAttestation, AttestationData} from "./ISchemaRegistry.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestation, AttestationData, AttestationRequestData} from "./ISchemaRegistry.sol";
 
 // Errors
 error SchemaAlreadyRegistered();
@@ -51,7 +51,17 @@ contract SchemaRegistry is ISchemaRegistry {
         return keccak256(abi.encodePacked(schemaRecord.schema, schemaRecord.resolver, schemaRecord.revocable));
     }
 
-    // submitAttestation
+    // submitAttestation (for non-schema attestations)
+    // TODO: Remove this, was only needed for testing. Users can directly call AttestationStation.sol
+    function submitAttestation(AttestationData calldata _request) external {
+        (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _request.about, _request.key, _request.val));
+        if(!success) {
+            revert AttestationFailed();
+        }
+        emit AttestationSubmitted(_request.about, _request.key, _request.val);
+    }
+
+    // submitSchemaAttestation
     function submitSchemaAttestation(SchemaAttestation calldata _request) external {
 
         SchemaAttestation[] memory _requests = new SchemaAttestation[](1);
@@ -111,5 +121,21 @@ contract SchemaRegistry is ISchemaRegistry {
             revert AttestationRetrievalFailed();
         }
         return abi.decode(value, (bytes));
+    }
+
+    /**
+     * @dev Multicall for getting attestations
+     * @param _requests Array of AttestationRequestData
+     */
+    function getMultipleAttestations(AttestationRequestData[] calldata _requests) external returns (bytes[] memory) {
+        bytes[] memory _responses = new bytes[](_requests.length);
+        for(uint256 i = 0; i < _requests.length; ) {
+            bytes memory value = _getSchemaAttestation(_requests[i].attester, _requests[i].about, _requests[i].key);
+            _responses[i] = value;
+            unchecked {
+                ++i;
+            }
+        }
+        return _responses;
     }
 }

@@ -26,10 +26,16 @@ struct AttestationData {
     bytes val;
 }
 
+struct AttestationRequestData {
+    address about;
+    bytes32 key;
+    address attester;
+}
 interface ISchemaRegistry {
 
     // Events
-
+    // TODO: Remove this, was only needed for testing. Was only used in submitAttestation and test_getMultipleAttestations
+    event AttestationSubmitted(address indexed about, bytes32 indexed key, bytes val);
     /**
      * @dev Emitted when a schema is registered.
      */

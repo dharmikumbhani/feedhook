@@ -3,17 +3,19 @@ pragma solidity 0.8.15;
 import "forge-std/Test.sol";
 import "../src/SchemaRegistry.sol";
 import "../src/AttestationStation/AttestationStation.sol";
-import {ISchemaRegistry, SchemaRecord, SchemaAttestation, SchemaAttestation} from "../src/ISchemaRegistry.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestation, SchemaAttestation, AttestationRequestData} from "../src/ISchemaRegistry.sol";
 
 contract SchemaRegistryTest is Test {
     SchemaRegistry public schemaRegistry;
     address bob = address(128);
     address alice = address(256);
+    AttestationStation atst;
     // Events
+    event AttestationSubmitted(address indexed about, bytes32 indexed key, bytes val);
     event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address indexed resolver, bool revocable, string schema);
     event SchemaAttestationSubmitted(bytes32 schemaUID, address indexed about, bytes32 indexed key, bytes data, address indexed attester);
     function setUp() public {
-        AttestationStation atst = new AttestationStation();
+        atst = new AttestationStation();
         schemaRegistry = new SchemaRegistry(address(atst));
         vm.deal(bob, 1 ether);
         vm.deal(alice, 1 ether);
@@ -236,5 +238,47 @@ contract SchemaRegistryTest is Test {
         schemaRegistry.getSchemaAttestation(alice, request.about, request.key);
     }
 
+    // Test getMultipleAttestations: Return Value
+    // Command: forge test --match-test test_getMultipleAttestations
+    function test_getMultipleAttestations() public {
+
+        address[] memory attesters = new address[](10);
+        bytes[] memory attestations = new bytes[](10);
+        AttestationRequestData[] memory requests = new AttestationRequestData[](10);
+        // Create multiple attestations
+        for(uint256 i = 0; i < 10; i++) {
+            // Generate attester
+            bytes32 _hash = keccak256(abi.encodePacked(block.timestamp + i));
+            address attester = address(uint160(uint256(_hash)));
+            attesters[i] = attester;
+            // Create attestation
+            AttestationData memory attestation = AttestationData({
+                about: address(200),
+                key: bytes32("test"),
+                val: "{text: 'test', number 1}"
+            });
+            vm.prank(attester);
+            // Submit attestation delegatecall
+            vm.expectEmit(true, true, true, true, address(schemaRegistry));
+            emit AttestationSubmitted(attestation.about, attestation.key, attestation.val);
+            schemaRegistry.submitAttestation(attestation);
+        }
+
+        // Get attestations
+        for(uint256 i = 0; i < 10; i++) {
+            requests[i] = AttestationRequestData({
+                about: address(200),
+                key: bytes32("test"),
+                attester: attesters[i]
+            });
+        }
+
+        attestations = schemaRegistry.getMultipleAttestations(requests);
+
+        for(uint256 i = 0; i < 10; i++) {
+            assertEq(attestations[i], bytes("{text: 'test', number 1}"));
+        }
+        
+    }
 
 }

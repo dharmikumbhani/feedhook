@@ -22,6 +22,7 @@ struct Signature {
     bytes32 s;
 }
 
+// TODO: Add SchemaUID to the AttestationData struct
 struct OffChainAttestationRequest {
     AttestationData attestationData;
     Signature signature;

@@ -19,13 +19,8 @@ contract SchemaRegistry is ISchemaRegistry {
 
     // Functions
 
-    function registerSchema(string calldata schema, address resolver, bool revocable) external returns (bytes32) {
-        SchemaRecord memory record = SchemaRecord({
-            uid: bytes32(0),
-            resolver: resolver,
-            revocable: revocable,
-            schema: schema
-        });
+    function registerSchema(SchemaRecord calldata _schemaRecord) external returns (bytes32) {
+        SchemaRecord memory record = _schemaRecord;
 
         bytes32 uid = getUID(record);
         if(schemaRegistry[uid].uid != bytes32(0)) {
@@ -34,7 +29,7 @@ contract SchemaRegistry is ISchemaRegistry {
         record.uid = uid;
         schemaRegistry[uid] = record;
 
-        emit SchemaRegistered(uid, msg.sender, resolver, revocable, schema);
+        emit SchemaRegistered(uid, msg.sender, record.delegate, record.delegatable, record.schema);
 
         return uid;
     }
@@ -48,8 +43,11 @@ contract SchemaRegistry is ISchemaRegistry {
 
     // Taken from the EAS SchemaRegistry.sol
     function getUID(SchemaRecord memory schemaRecord) private pure returns (bytes32 uid) {
-        return keccak256(abi.encodePacked(schemaRecord.schema, schemaRecord.resolver, schemaRecord.revocable));
+        return keccak256(abi.encodePacked(schemaRecord.schema, schemaRecord.resolver, schemaRecord.revocable, schemaRecord.delegatable, schemaRecord.delegate));
     }
+
+    // SchemaRegistry Ends Here
+    // TODO: Move below to AttestationStationMiddleware
 
     // submitAttestation (for non-schema attestations)
     // TODO: Remove this, was only needed for testing. Users can directly call AttestationStation.sol

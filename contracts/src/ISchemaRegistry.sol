@@ -10,6 +10,8 @@ struct SchemaRecord {
     address resolver; // The address of the resolver for the schema.
     bool revocable; // Whether the schema allows revocations explicitly.
     string schema; // Custom specification of the schema (e.g., an ABI).
+    bool delegatable;// Whether the schema allows delegation of attestations.
+    address delegate; // The address of the delegate for the schema.
 }
 
 struct SchemaAttestation {
@@ -39,7 +41,7 @@ interface ISchemaRegistry {
     /**
      * @dev Emitted when a schema is registered.
      */
-    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address indexed resolver, bool revocable, string schema);
+    event SchemaRegistered(bytes32 indexed uid, address indexed registerer, address indexed delegate, bool delegatable, string schema);
     /**
      * @dev Emitted when a schema attestation is submitted.
      * @notice about, key and attester are indexed to retrieve the attestation[attester][about][key] from AttestationStation.sol
@@ -47,11 +49,9 @@ interface ISchemaRegistry {
     event SchemaAttestationSubmitted(bytes32 schemaUID, address indexed about, bytes32 indexed key, bytes data, address indexed attester);
     /**
      * @dev Registers a schema with the registry.
-     * @param schema The schema to register.
-     * @param revocable Whether the schema allows revocations explicitly.
-     * @return uid The unique identifier of the schema.
+     * @param _schemaRecord The schema record.
      */
-    function registerSchema(string calldata schema, address resolver, bool revocable) external returns (bytes32 uid);
+    function registerSchema(SchemaRecord calldata _schemaRecord) external returns (bytes32 uid);
 
     /**
      * @notice Gets a schema record from the registry.

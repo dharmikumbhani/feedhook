@@ -29,7 +29,7 @@ contract AttestationVerifierTest is Test {
 
         // Deploy AttestationVerifier
         atst = new AttestationStation();
-        attestationVerifier = new AttestationVerifier(name, version, address(atst));
+        // attestationVerifier = new AttestationVerifier(name, version, address(atst));
         sigUtils = new SigUtils(attestationVerifier.getDomainSeparator());
     }
 

@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.15;
 
-import {ISchemaRegistry, SchemaRecord, SchemaAttestation, AttestationData, AttestationRequestData} from "./ISchemaRegistry.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestationRequest,SchemaAttestationData, AttestationData, AttestationRequestData} from "./ISchemaRegistry.sol";
 
 // Errors
 error SchemaAlreadyRegistered();
@@ -11,7 +11,7 @@ error AttestationFailed();
 error AttestationRetrievalFailed();
 contract SchemaRegistry is ISchemaRegistry {
     // State
-    mapping(bytes32 => SchemaRecord) private schemaRegistry;
+    mapping(bytes32 => SchemaRecord) public schemaRegistry;
     address public immutable ATTESTATION_STATION;
     constructor(address _attestationStation) {
         ATTESTATION_STATION = _attestationStation;
@@ -60,51 +60,51 @@ contract SchemaRegistry is ISchemaRegistry {
     }
 
     // submitSchemaAttestation
-    function submitSchemaAttestation(SchemaAttestation calldata _request) external {
+    function submitSchemaAttestation(SchemaAttestationRequest calldata _request) external {
 
-        SchemaAttestation[] memory _requests = new SchemaAttestation[](1);
+        SchemaAttestationRequest[] memory _requests = new SchemaAttestationRequest[](1);
         _requests[0] = _request;
         // Submit the attestation to AttestationStation.sol
-        _submitSchemaAttestation(_requests);
+        // _submitSchemaAttestation(_requests);
     }
 
-    function _submitSchemaAttestation(SchemaAttestation[] memory _requests) private {
+    // function _submitSchemaAttestation(SchemaAttestationRequest[] memory _requests) private {
 
-        for(uint256 i = 0; i < _requests.length; ) {
-            if(schemaRegistry[_requests[i].schemaUID].uid == bytes32(0)) {
-                revert SchemaNotRegistered();
-            }
+    //     for(uint256 i = 0; i < _requests.length; ) {
+    //         if(schemaRegistry[_requests[i].schemaUID].uid == bytes32(0)) {
+    //             revert SchemaNotRegistered();
+    //         }
 
-            bytes memory value = abi.encode(_requests[i].schemaUID, _requests[i].data, _requests[i].attester);
+    //         bytes memory value = abi.encode(_requests[i].schemaUID, _requests[i].data, _requests[i].attester);
 
 
-            (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _requests[i].about, _requests[i].key, value));
+    //         (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _requests[i].about, _requests[i].key, value));
             
-            if(!success) {
-                revert AttestationFailed();
-            }
+    //         if(!success) {
+    //             revert AttestationFailed();
+    //         }
 
-            emit SchemaAttestationSubmitted(_requests[i].schemaUID, _requests[i].about, _requests[i].key, _requests[i].data, _requests[i].attester);
+    //         emit SchemaAttestationSubmitted(_requests[i].schemaUID, _requests[i].about, _requests[i].key, _requests[i].data, _requests[i].attester);
 
-            unchecked {
-                ++i;
-            }
-        }
-    }
+    //         unchecked {
+    //             ++i;
+    //         }
+    //     }
+    // }
 
     // multiSubmitSchemaAttestation
-    function multiSubmitSchemaAttestation(SchemaAttestation[] calldata _requests) external {
+    function multiSubmitSchemaAttestation(SchemaAttestationRequest[] calldata _requests) external {
         // Submit the attestation to AttestationStation.sol
-        _submitSchemaAttestation(_requests);
+        // _submitSchemaAttestation(_requests);
     }
 
 
     // getSchemaAttestation
-    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestation memory) {
+    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestationData memory) {
         // Get the attestation from AttestationStation.sol
         bytes memory value = _getSchemaAttestation(_attester, _about, _key);
         (bytes32 schemaUID, bytes memory data, address attester) = abi.decode(value, (bytes32, bytes, address));
-        return SchemaAttestation({
+        return SchemaAttestationData({
             schemaUID: schemaUID,
             about: _about,
             key: _key,

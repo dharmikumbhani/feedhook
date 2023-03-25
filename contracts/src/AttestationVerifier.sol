@@ -27,19 +27,19 @@ struct OffChainAttestationRequest {
     AttestationData attestationData;
     Signature signature;
     address attester;
+    bytes32 schemaUID; // To check for delegatable and delegate props
 }
 
-contract AttestationVerifier is EIP712 {
+abstract contract AttestationVerifier is EIP712 {
     // keccak256("Attestation(address about,bytes32 key,bytes value)")
     bytes32 private constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,uint256 nonce)");
     
     // Replay protection
     mapping(address => uint256) private _nonces;
     
-    address public immutable ATTESTATION_STATION;
 
-    constructor(string memory name, string memory version, address _atst) EIP712(name, version) {
-        ATTESTATION_STATION = _atst;
+    constructor(string memory name, string memory version) EIP712(name, version) {
+
     }
 
     function getDomainSeparator() public view returns (bytes32) {
@@ -79,7 +79,7 @@ contract AttestationVerifier is EIP712 {
     function _verifyAttestation(
         AttestationData calldata _attestation,
         Signature calldata _signature,
-        address _attester) private returns (address) {
+        address _attester) internal returns (address) {
             // Check the nonce
             uint256 nonce;
             unchecked {

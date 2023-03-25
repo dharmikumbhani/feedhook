@@ -14,8 +14,16 @@ struct SchemaRecord {
     address delegate; // The address of the delegate for the schema.
 }
 
-struct SchemaAttestation {
-    bytes32 schemaUID; // The unique identifier of the schema.
+struct SchemaAttestationRequest {
+    bytes32 uid; // The unique identifier of the schema.
+    address about; // The address of the subject of the attestation.
+    bytes32 key; // The key of the attestation.
+    bytes data; // The data of the attestation.
+    // msg.sender is the attester
+}
+
+struct DelegatedSchemaAttestationRequest {
+    bytes32 uid; // The unique identifier of the schema.
     address about; // The address of the subject of the attestation.
     bytes32 key; // The key of the attestation.
     bytes data; // The data of the attestation.
@@ -31,6 +39,13 @@ struct AttestationData {
 struct AttestationRequestData {
     address about;
     bytes32 key;
+    address attester;
+}
+struct SchemaAttestationData {
+    bytes32 schemaUID;
+    address about;
+    bytes32 key;
+    bytes data;
     address attester;
 }
 interface ISchemaRegistry {
@@ -64,7 +79,7 @@ interface ISchemaRegistry {
      * @notice Submits a schema attestation to AttestationStation.sol
      * @param _request The schema attestation request.
      */
-    function submitSchemaAttestation(SchemaAttestation calldata _request) external;
+    function submitSchemaAttestation(SchemaAttestationRequest calldata _request) external;
 
     /**
      * @notice Gets a attestation from AttestationStation.sol, converts it to a SchemaAttestation struct and returns it.
@@ -73,5 +88,5 @@ interface ISchemaRegistry {
      * @param _key The key of the attestation.
      * @return The schema attestation.
      */
-    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestation memory);
+    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestationData memory);
 }

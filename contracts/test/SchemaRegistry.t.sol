@@ -3,7 +3,7 @@ pragma solidity 0.8.15;
 import "forge-std/Test.sol";
 import "../src/SchemaRegistry.sol";
 import "../src/AttestationStation/AttestationStation.sol";
-import {ISchemaRegistry, SchemaRecord, SchemaAttestation, SchemaAttestation, AttestationRequestData} from "../src/ISchemaRegistry.sol";
+import {ISchemaRegistry, SchemaRecord, SchemaAttestationRequest, AttestationRequestData} from "../src/ISchemaRegistry.sol";
 
 contract SchemaRegistryTest is Test {
     SchemaRegistry public schemaRegistry;

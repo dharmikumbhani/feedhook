@@ -98,7 +98,12 @@
     padding: 2px;
     margin-right: 2px;
 }
-
+/* Successful Container */
+.successful-container > p {
+    color: #16a34a;
+    font-weight: var(--font-weight-body);
+    text-align: center;
+}
 
 /* Widget */
 .widget-container {
@@ -111,7 +116,7 @@
     min-width: 350px;
     margin: var(--margin-s);
 }
-.widget-container > h1, .widget-container > .buttons-container, .widget-container > .loading-container {
+.widget-container > h1, .widget-container > .buttons-container, .widget-container > .loading-container, .widget-container > .successful-container {
     margin-bottom: calc(var(--margin-s)*2);
 }
 .page-helpful-widget > .buttons-container > button {

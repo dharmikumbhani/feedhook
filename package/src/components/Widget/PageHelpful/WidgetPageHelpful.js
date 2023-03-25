@@ -9,6 +9,8 @@ import LoadingSVG from '../../LoadingSVG/LoadingSVG'
 export default function WidgetPageHelpful(props) {
   const [pageHelpful, setPageHelpful] = useState();
   const [loading, setLoading] = useState(false);
+  const [successfulAttestation, setSuccessfulAttestation] = useState(false);
+
   useEffect(() => {
     // Here is where we can send the signing request along with data from feedback text
     console.log('pageHelpful in useEffect', pageHelpful)
@@ -22,7 +24,12 @@ export default function WidgetPageHelpful(props) {
     <div className='widget-container page-helpful-widget'>
         <CloseButton onCloseButtonClicked={onCloseButtonClicked} />
         <ModalHeading heading="Is this page helpful?" />
-        {loading ? (
+        {
+          successfulAttestation ? (
+            <div className="successful-container">
+              <p>Attestation successfully recorded!</p>
+            </div>
+          ) : loading ? (
           <div className='loading-container'>
             <LoadingSVG />
           </div>

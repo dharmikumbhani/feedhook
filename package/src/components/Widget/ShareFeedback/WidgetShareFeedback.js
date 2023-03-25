@@ -10,6 +10,7 @@ export default function WidgetShareFeedback(props) {
   const [feedbackText, setFeedbackText] = useState()
   const [sendButtonClicked, setSendButtonClicked] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [successfulAttestation, setSuccessfulAttestation] = useState(false)
 
   useEffect(() => {
     if (sendButtonClicked) {
@@ -32,7 +33,11 @@ export default function WidgetShareFeedback(props) {
     <div className='widget-container'>
         <CloseButton />
         <ModalHeading heading="Share Feedback" />
-        {loading ? (
+        {successfulAttestation ? (
+          <div className="successful-container">
+            <p>Attestation successfully recorded!</p>
+          </div>
+        ) : loading ? (
           <div className='loading-container'>
             <LoadingSVG />
           </div>

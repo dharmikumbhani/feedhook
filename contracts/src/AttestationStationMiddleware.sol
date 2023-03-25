@@ -128,6 +128,10 @@ contract AttestationStationMiddleware is AttestationVerifier{
 
             // Emit event for delegated schema attestation
             emit SubmittedDelegatedSchemaAttestation(_requests[i].about, _requests[i].key, _requests[i].delegate, value, _requests[i].attester);
+
+            unchecked {
+                ++i;
+            }
         }
     }
 

@@ -128,59 +128,64 @@ contract DelegatedTest is Test {
 
         // Verify Attestation
         assertEq(attestationStationMiddleware.verifyAttestation(request), true);
+        assertEq(attestationStationMiddleware.getNonce(bob), 1);
     }
 
     // Test submitDelegatedSchemaAttestation: Emit
     // Command: forge test --match-test test_submitDelegatedSchemaAttestation
-    // function test_submitDelegatedSchemaAttestation() public {
-    //     // Register a schema
-    //     string memory schema = "{text: string, number: uint256}";
-    //     address resolver = alice;
-    //     bool revocable = true;
-    //     SchemaRecord memory data = SchemaRecord({
-    //         uid: bytes32(0),
-    //         schema: schema,
-    //         resolver: resolver,
-    //         revocable: revocable,
-    //         delegatable: true,
-    //         delegate: delegateAddr
-    //     });
-    //     bytes32 schemaUid = schemaRegistry.registerSchema(data);
-    //     // Sign the message with bob's private key
-    //     uint256 nonce = attestationStationMiddleware.getNonce(bob);
+    function test_submitDelegatedSchemaAttestation() public {
+        // Register a schema
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable,
+            delegatable: true,
+            delegate: delegateAddr
+        });
+        bytes32 schemaUid = schemaRegistry.registerSchema(data);
+        // Sign the message with bob's private key
+        uint256 nonce = attestationStationMiddleware.getNonce(bob);
         
-    //     // Digest
-    //     bytes32 digest = sigUtils.getTypedDataHash(atstData({
-    //         about: alice,
-    //         key: bytes32("key"),
-    //         val: "{text: Hello World!, number: 123}", // Follows Schema Format
-    //         delegate: delegateAddr
-    //     }), nonce);
-    //     // Sign 
-    //     (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKey, digest);
+        atstData memory digestData = atstData({
+            about: alice,
+            key: bytes32("key"),
+            val: "{text: Hello World!, number: 123}", // Follows Schema Format
+            delegate: delegateAddr
+        });
+        // Digest
+        bytes32 digest = sigUtils.getTypedDataHash(digestData, nonce);
+        // Sign 
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKey, digest);
 
-    //     Signature memory signature = Signature({
-    //         v: v,
-    //         r: r,
-    //         s: s
-    //     });
+        Signature memory signature = Signature({
+            v: v,
+            r: r,
+            s: s
+        });
 
 
-    //     // Delegated Attestation Request
-    //     DelegatedSchemaAttestationRequest memory request = DelegatedSchemaAttestationRequest({
-    //         uid: schemaUid,
-    //         about: alice,
-    //         key: bytes32("key"),
-    //         data: bytes("Hello World!"),
-    //         delegate: delegateAddr,
-    //         attester: bob, // Now bob has to sign the message to approve the delegate.
-    //         signature: signature
-    //     });
+        // Delegated Attestation Request
+        DelegatedSchemaAttestationRequest memory request = DelegatedSchemaAttestationRequest({
+            uid: schemaUid,
+            about: alice,
+            key: bytes32("key"),
+            data: "{text: Hello World!, number: 123}", // Follows Schema Format
+            delegate: delegateAddr,
+            attester: bob, // Now bob has to sign the message to approve the delegate.
+            signature: signature
+        });
 
-    //     // Submit the attestation
-    //     vm.prank(delegateAddr); // Called by delegate else it'll fail
-    //     vm.expectEmit(true, true, true, true, address(attestationStationMiddleware));
-    //     emit SubmittedDelegatedSchemaAttestation(request.about, request.key, request.delegate, request.data, request.attester);
-    //     attestationStationMiddleware.submitDelegatedSchemaAttestation(request);
-    // }
+        // Make sure the signed value bytes are the same as the data bytes in the request
+        assertEq(request.data, digestData.val);
+
+        // Submit the attestation
+        vm.prank(delegateAddr); // Called by delegate else it'll fail
+        vm.expectEmit(true, true, true, false, address(attestationStationMiddleware));
+        emit SubmittedDelegatedSchemaAttestation(request.about, request.key, request.delegate, request.data, request.attester);
+        attestationStationMiddleware.submitDelegatedSchemaAttestation(request);
+    }
 }

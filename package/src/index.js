@@ -1,1 +1,1 @@
-export {CTAWidgetButton} from './components/Button/Button'
+export * from './components/Widget/FeedhookWidget'

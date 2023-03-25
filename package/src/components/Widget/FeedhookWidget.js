@@ -3,7 +3,7 @@ import WidgetPageHelpful from './PageHelpful/WidgetPageHelpful'
 import WidgetRateExperience from './RateExperience.js/WidgetRateExperience'
 import WidgetShareFeedback from './ShareFeedback/WidgetShareFeedback'
 
-export default function FeedhookWidget(props) {
+export const FeedhookWidget = (props) => {
   return (
     <>
     {

@@ -3,7 +3,7 @@ import CloseButton from '../../CloseButton/CloseButton'
 import Button from '../../Button/Button'
 import ModalHeading from '../../ModalHeading/ModalHeading'
 import Footer from '../../Footer/Footer'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import LoadingSVG from '../../LoadingSVG/LoadingSVG'
 
 export default function WidgetPageHelpful(props) {
@@ -11,17 +11,23 @@ export default function WidgetPageHelpful(props) {
   const [loading, setLoading] = useState(false);
   const [successfulAttestation, setSuccessfulAttestation] = useState(false);
 
+  const widgetContainerRef = useRef(null);
+
+  const onCloseButtonClicked = () => {
+    widgetContainerRef.current.classList.add('close-widget')
+    console.log('close Button Clicked')
+  }
+
   useEffect(() => {
     // Here is where we can send the signing request along with data from feedback text
     console.log('pageHelpful in useEffect', pageHelpful)
     // Make sure to make the widget disappear or unmount once the button click function and signing is done
   }, [pageHelpful])
-  const onCloseButtonClicked = () => {
-    console.log('close Button Clicked')
-  }
+
   return (
     <>
-    <div className='widget-container page-helpful-widget'>
+    {/* <div className='widget-backdrop'> */}
+    <div ref={widgetContainerRef} className='widget-container page-helpful-widget'>
         <CloseButton onCloseButtonClicked={onCloseButtonClicked} />
         <ModalHeading heading="Is this page helpful?" />
         {
@@ -41,6 +47,7 @@ export default function WidgetPageHelpful(props) {
         )}
         <Footer />
     </div>
+    {/* </div> */}
     </>
   )
 }

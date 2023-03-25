@@ -4,7 +4,7 @@ import Button from '../../Button/Button'
 import ModalHeading from '../../ModalHeading/ModalHeading'
 import Footer from '../../Footer/Footer'
 import TextAreaInput from '../../TextAreaInput/TextAreaInput'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function WidgetShareFeedback(props) {
   const [feedbackText, setFeedbackText] = useState()
@@ -12,26 +12,27 @@ export default function WidgetShareFeedback(props) {
   const [loading, setLoading] = useState(false)
   const [successfulAttestation, setSuccessfulAttestation] = useState(false)
 
+  const widgetContainerRef = useRef(null);
+
+  const onCloseButtonClicked = () => {
+    widgetContainerRef.current.classList.add('close-widget')
+    console.log('close Button Clicked')
+  }
+
   useEffect(() => {
     if (sendButtonClicked) {
       // Here is where we can send the signing request along with data from feedback text
-      console.log('submit button clicked state', sendButtonClicked, 'with feedback as', feedbackText)
+      console.log('submit button clicked state in useState', sendButtonClicked, 'with feedback as', feedbackText)
     } else {
       console.log('Waiting for submit button to be clicked feedback text in useEffect', feedbackText)
     }
   }, [feedbackText, sendButtonClicked])
 
-  const onClickButtonFunction = () => {
-    setSendButtonClicked(true)
-    // Here is where we can send the signing request along with data from feedback text
-    console.log('Button Clicked!!')
-    // Make sure to make the widget disappear or unmount once the button click function and signing is done
-  }
 
   return (
     <>
-    <div className='widget-container'>
-        <CloseButton />
+    <div ref={widgetContainerRef} className='widget-container'>
+        <CloseButton onCloseButtonClicked={onCloseButtonClicked} />
         <ModalHeading heading="Share Feedback" />
         {successfulAttestation ? (
           <div className="successful-container">
@@ -44,7 +45,7 @@ export default function WidgetShareFeedback(props) {
         ) : (
           <div className="buttons-container">
               <TextAreaInput setFeedbackText={setFeedbackText} />
-              <Button onClickButtonFunction={onClickButtonFunction} buttonTitle="Send" />
+              <Button onClickButtonFunction={() => setSendButtonClicked(true)} buttonTitle="Send" />
           </div>
         )}
         <Footer />

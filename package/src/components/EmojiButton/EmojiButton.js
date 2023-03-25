@@ -16,7 +16,7 @@ export default function EmojiButton(props) {
   }
   return (
     <>
-    <button onClick={() => {props.setRatingValue(props.arrayObject.value);}} className="emoji-button" type="submit">
+    <button onClick={props.onClickButtonFunction} className="emoji-button" type="submit">
         <img src={mappingEmotionToEmojiPath[props.emotion].path} />
     </button>
     </>

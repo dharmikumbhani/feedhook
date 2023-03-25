@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.15;
 
-import {AttestationData} from "../src/AttestationVerifier.sol";
+struct AttestationData {
+    address about;
+    bytes32 key;
+    bytes val;
+    address delegate;
+}
 contract SigUtils {
     bytes32 internal DOMAIN_SEPARATOR;
 
@@ -10,13 +15,9 @@ contract SigUtils {
         DOMAIN_SEPARATOR = _DOMAIN_SEPARATOR;
     }
 
-    // // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
-    // bytes32 public constant PERMIT_TYPEHASH =
-    //     0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+    bytes32 public constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,address delegate,uint256 nonce)");
 
-    bytes32 public constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,uint256 nonce)");
-
-    // computes the hash of a permit
+    // computes the hash of the data
     function getStructHash(AttestationData memory _attestation, uint256 _nonce)
         internal
         pure
@@ -29,6 +30,7 @@ contract SigUtils {
                     _attestation.about,
                     _attestation.key,
                     _attestation.val,
+                    _attestation.delegate,
                     _nonce
                 )
             );

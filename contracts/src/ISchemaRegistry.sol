@@ -22,13 +22,31 @@ struct SchemaAttestationRequest {
     // msg.sender is the attester
 }
 
+/**
+ * The attester signs (EIP-712) a message containing the following data:
+ * 1. about
+ * 2. key
+ * 3. val (data)
+ * 4. nonce
+ * 5. delegate. This delegate is from the schemaRecord.
+ */
+
+struct Signature {
+    uint8 v;
+    bytes32 r;
+    bytes32 s;
+}
 struct DelegatedSchemaAttestationRequest {
     bytes32 uid; // The unique identifier of the schema.
     address about; // The address of the subject of the attestation.
     bytes32 key; // The key of the attestation.
     bytes data; // The data of the attestation.
     address attester; // The address of the attester.
+    address delegate; // The address of the delegate.
+    Signature signature; // The signature of the attester.
 }
+
+
 
 struct AttestationData {
     address about;

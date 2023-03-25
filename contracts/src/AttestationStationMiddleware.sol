@@ -25,6 +25,7 @@ contract AttestationStationMiddleware is AttestationVerifier{
      * @notice about, key and attester are indexed to retrieve the attestation[attester][about][key] from AttestationStation.sol
      */
     event SchemaAttestationSubmitted(bytes32 schemaUID, address indexed about, bytes32 indexed key, bytes data, address indexed attester);
+    event SubmittedDelegatedSchemaAttestation(address indexed about, bytes32 indexed key, address indexed delegate, bytes data, address attester);
 
     constructor(address _atst, ISchemaRegistry _schemaRegistry) AttestationVerifier(NAME, VERSION) {
         ATTESTATION_STATION = _atst;
@@ -101,13 +102,49 @@ contract AttestationStationMiddleware is AttestationVerifier{
                 revert SchemaNotDelegatable(); // Attempting to submit a undelegated schema attestation.
             }
 
+            address delegate = schemaRecord.delegate; // This is the address that attests on behalf of the _requests[i].attester
+
+            // Check if the delegate is the msg.sender
+            if(delegate != msg.sender && delegate != address(0)) { // If delegate is 0 address then anyone can attest on behalf of the attester.
+                revert UnauthorizedSchemaAttestation();
+            }
+            // Now delegate can be 0 address or the msg.sender
+            
+            // Add a check to see if Request.delegate is same as schemaRecord.delegate. Is this necessary? As it is already in the message signed by the attester.
+            if(_requests[i].delegate != delegate) {
+                revert UnauthorizedSchemaAttestation();
+            }
+            // Verify the signature.
+            _verifyAttestation(_requests[i]);
+
+            // Verified! Submit the attestation to AttestationStation.sol
             bytes memory value = abi.encode(_requests[i].uid, _requests[i].data, _requests[i].attester); // msg.sender is the attester as this is not a delegated schema attestation.
+
+            (bool success, ) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attest(address,bytes32,bytes)", _requests[i].about, _requests[i].key, value));
+
+            if(!success) {
+                revert AttestationFailed();
+            }
+
+            // Emit event for delegated schema attestation
+            emit SubmittedDelegatedSchemaAttestation(_requests[i].about, _requests[i].key, _requests[i].delegate, value, _requests[i].attester);
         }
     }
 
     // submitDelegatedSchemaAttestation
     function submitDelegatedSchemaAttestation(DelegatedSchemaAttestationRequest calldata _request) external {
+        
+            DelegatedSchemaAttestationRequest[] memory _requests = new DelegatedSchemaAttestationRequest[](1);
+            _requests[0] = _request;
+            // Submit the attestation to AttestationStation.sol
+            _submitDelegatedSchemaAttestation(_requests);
+    }
 
+    // verifyAttestation
+    function verifyAttestation(DelegatedSchemaAttestationRequest calldata _request) external returns (bool) {
+        // Verify the signature.
+        _verifyAttestation(_request);
+        return true;
     }
     
 

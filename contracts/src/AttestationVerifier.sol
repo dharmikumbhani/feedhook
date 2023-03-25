@@ -9,30 +9,18 @@ pragma solidity 0.8.15;
 import "openzeppelin/utils/cryptography/EIP712.sol";
 import "openzeppelin/utils/cryptography/ECDSA.sol";
 import "forge-std/console.sol";
+import {DelegatedSchemaAttestationRequest} from "./ISchemaRegistry.sol";
 // Errors
 error InvalidSignature();
-struct AttestationData {
-    address about;
-    bytes32 key;
-    bytes val;
-}
 struct Signature {
     uint8 v;
     bytes32 r;
     bytes32 s;
 }
 
-// TODO: Add SchemaUID to the AttestationData struct
-struct OffChainAttestationRequest {
-    AttestationData attestationData;
-    Signature signature;
-    address attester;
-    bytes32 schemaUID; // To check for delegatable and delegate props
-}
-
 abstract contract AttestationVerifier is EIP712 {
     // keccak256("Attestation(address about,bytes32 key,bytes value)")
-    bytes32 private constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,uint256 nonce)");
+    bytes32 private constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,address delegate,uint256 nonce)");
     
     // Replay protection
     mapping(address => uint256) private _nonces;
@@ -54,32 +42,14 @@ abstract contract AttestationVerifier is EIP712 {
         return _nonces[_attester];
     }
 
-    
-    /**
-     * @notice Verifies an attestation
-     * @param _attestation The attestation to verify
-     * @param _signature The signature of the attestation
-     * @param _attester The address of the attester
-     */
-
-    function verifyAttestation(
-        AttestationData calldata _attestation,
-        Signature calldata _signature,
-        address _attester
-    ) external returns (address) {
-        return _verifyAttestation(_attestation, _signature, _attester);
-    }
 
     /**
      * @dev private verification function
      * @param _attestation The attestation to verify
-     * @param _signature The signature of the attestation
-     * @param _attester The address of the attester
      */
     function _verifyAttestation(
-        AttestationData calldata _attestation,
-        Signature calldata _signature,
-        address _attester) internal returns (address) {
+        DelegatedSchemaAttestationRequest memory _attestation) internal returns (address) {
+            address _attester = _attestation.attester; 
             // Check the nonce
             uint256 nonce;
             unchecked {
@@ -91,18 +61,18 @@ abstract contract AttestationVerifier is EIP712 {
                 ATTESTATION_TYPEHASH,
                 _attestation.about,
                 _attestation.key,
-                _attestation.val,
+                _attestation.data, // value in attestation
+                _attestation.delegate,
                 nonce
             )));
 
-            address signer = ECDSA.recover(digest, _signature.v, _signature.r, _signature.s);
+            address signer = ECDSA.recover(digest, _attestation.signature.v, _attestation.signature.r, _attestation.signature.s);
 
             if (signer != _attester) {
                 revert InvalidSignature();
             }
 
             return _attester;
-
         }
 
     /**
@@ -110,16 +80,16 @@ abstract contract AttestationVerifier is EIP712 {
      * @param _requests The requests to submit
      */
     
-    function _submitAttestations(OffChainAttestationRequest[] calldata _requests) external {
-        for (uint256 i = 0; i < _requests.length; i++) {
-            OffChainAttestationRequest calldata request = _requests[i];
-            _verifyAttestation(request.attestationData, request.signature, request.attester);
+    // function _submitAttestations(OffChainAttestationRequest[] calldata _requests) external {
+    //     for (uint256 i = 0; i < _requests.length; i++) {
+    //         OffChainAttestationRequest calldata request = _requests[i];
+    //         _verifyAttestation(request.attestationData, request.signature, request.attester);
 
-            // Delegated Attestation Call to Attestation Station as attester will not be the msg.sender
-            // Create Schema DelegatedAttestationCall. How to create a universal schema for this? Such all schema can be submitted by a delegate.
-            // Add boolean delegate
-            // Add address delegateAddr
-            // Can schema creator change delegate address?
-        }
-    }
+    //         // Delegated Attestation Call to Attestation Station as attester will not be the msg.sender
+    //         // Create Schema DelegatedAttestationCall. How to create a universal schema for this? Such all schema can be submitted by a delegate.
+    //         // Add boolean delegate
+    //         // Add address delegateAddr
+    //         // Can schema creator change delegate address?
+    //     }
+    // }
 }

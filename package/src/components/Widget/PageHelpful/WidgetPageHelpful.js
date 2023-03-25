@@ -7,10 +7,10 @@ import Footer from '../../Footer/Footer'
 export default function WidgetPageHelpful(props) {
   return (
     <>
-    <div className='widget-container'>
+    <div className='widget-container page-helpful-widget'>
         <CloseButton />
         <ModalHeading heading="Is this page helpful?" />
-        <div class="flex-horizontal buttons-container">
+        <div className="flex-horizontal buttons-container">
             <Button onClickButton={()=> {console.log('Click')}} buttonTitle="Yes" />
             <Button onClickButton={()=> {console.log('Click')}} buttonTitle="No" />
         </div>

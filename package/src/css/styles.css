@@ -6,6 +6,8 @@
     align-items: center;
     justify-content: center;
 }
+
+/* BUTTONS */
 .cta-widget-button {
     width: 100%;
     border-radius: var(--border-radius-small);
@@ -14,10 +16,10 @@
     color: white;
     font-family: var(--fonts-body);
     font-weight: var(--font-weight-body);
-    margin-inline: var(--margin-xs);
+    /* margin-inline: var(--margin-xs); */
 }
 
-/* text area input */
+/* TEXT AREA INPUT */
 .text-area-input {
     border-radius: var(--border-radius-medium);
     width: 100%;
@@ -28,14 +30,32 @@
     font-family: var(--fonts-body);
     font-size: var(--font-size-m);
     font-weight: var(--font-weight-body);
+    margin-bottom: var(--margin-xs);
+    box-sizing: border-box;
 }
 
-/* Modal heading */
-.modal-heading {
-    font-family: var(--fonts-body);
-    font-weight: var(--font-weight-headings);
-    font-size: var(--font-size-m);
-    text-align: center;
+/* EMOJI BUTTON */
+.emoji-button {
+    width: 52px;
+    height: 52px;
+    padding: 8px;
+    background-color: rgb(236, 236, 236, 0.5);
+    border-radius: var(--border-radius-small);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: var(--margin-xs);
+}
+.emoji-button > img {
+    width: 100%;
+}
+.emoji-button:hover {
+    background-color: rgb(236, 236, 236, 0.7);
+}
+.emoji-button:hover > img {
+    scale: 1.05;
+    transition: all 0.5;
 }
 
 /* Close Button */
@@ -56,6 +76,14 @@
     transition: all 0.1s ease-out;
 }
 
+/* Modal heading */
+.modal-heading {
+    font-family: var(--fonts-body);
+    font-weight: var(--font-weight-headings);
+    font-size: var(--font-size-m);
+    text-align: center;
+}
+
 /* Footer */
 .footer-text {
     /* margin-left: var(--margin-xs); */
@@ -70,15 +98,23 @@
     padding: 2px;
     margin-right: 2px;
 }
+
+
+/* Widget */
 .widget-container {
     position: relative;
     background-color: white;
     padding: 16px 16px 8px 16px;
     box-shadow: var(--box-shadow-black);
-    width: 100%;
+    width: fit-content;
     border-radius: var(--border-radius-medium);
-    max-width: 350px;
+    min-width: 350px;
+    margin: var(--margin-s);
 }
 .widget-container > h1, .widget-container > .buttons-container {
     margin-bottom: calc(var(--margin-s)*2);
+}
+.page-helpful-widget > .buttons-container > button {
+    margin-left: var(--margin-xs);
+    margin-right: var(--margin-xs);
 }

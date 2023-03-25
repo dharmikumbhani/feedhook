@@ -3,7 +3,7 @@
 pragma solidity 0.8.15;
 // Imports
 import "forge-std/Test.sol";
-import {AttestationVerifier, Attestation, Signature} from "../src/AttestationVerifier.sol";
+import {AttestationVerifier, AttestationData, Signature} from "../src/AttestationVerifier.sol";
 import "../src/AttestationStation/AttestationStation.sol";
 import "./SigUtils.sol";
 import "forge-std/console.sol";
@@ -28,9 +28,8 @@ contract AttestationVerifierTest is Test {
         vm.deal(alice, 1 ether);
 
         // Deploy AttestationVerifier
-        
-        attestationVerifier = new AttestationVerifier(name, version);
         atst = new AttestationStation();
+        attestationVerifier = new AttestationVerifier(name, version, address(atst));
         sigUtils = new SigUtils(attestationVerifier.getDomainSeparator());
     }
 
@@ -61,13 +60,13 @@ contract AttestationVerifierTest is Test {
     }
 
     // Test _verifyAttestation
-    // Command: forge test --match-test test__verifyAttestation
-    function test__verifyAttestation() public {
+    // Command: forge test --match-test test_verifyAttestation
+    function test_verifyAttestation() public {
         // Attestation
-        Attestation memory attestation = Attestation({
+        AttestationData memory attestation = AttestationData({
             about: bob,
             key: keccak256("name"),
-            value: "bob"
+            val: "bob"
         });
         
         // get nonce
@@ -87,7 +86,7 @@ contract AttestationVerifierTest is Test {
             s: s
         });
         // Verify
-        address attestedBy = attestationVerifier._verifyAttestation(attestation, signature, bob);
+        address attestedBy = attestationVerifier.verifyAttestation(attestation, signature, bob);
         // Check nonce
         assertEq(attestationVerifier.getNonce(bob), 1);
         // Check attestedBy

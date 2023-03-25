@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.15;
 
-import {Attestation} from "../src/AttestationVerifier.sol";
+import {AttestationData} from "../src/AttestationVerifier.sol";
 contract SigUtils {
     bytes32 internal DOMAIN_SEPARATOR;
 
@@ -17,7 +17,7 @@ contract SigUtils {
     bytes32 public constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,uint256 nonce)");
 
     // computes the hash of a permit
-    function getStructHash(Attestation memory _attestation, uint256 _nonce)
+    function getStructHash(AttestationData memory _attestation, uint256 _nonce)
         internal
         pure
         returns (bytes32)
@@ -28,14 +28,14 @@ contract SigUtils {
                     ATTESTATION_TYPEHASH,
                     _attestation.about,
                     _attestation.key,
-                    _attestation.value,
+                    _attestation.val,
                     _nonce
                 )
             );
     }
 
     // computes the hash of the fully encoded EIP-712 message for the domain, which can be used to recover the signer
-    function getTypedDataHash(Attestation memory _attestation, uint256 _nonce)
+    function getTypedDataHash(AttestationData memory _attestation, uint256 _nonce)
         public
         view
         returns (bytes32)

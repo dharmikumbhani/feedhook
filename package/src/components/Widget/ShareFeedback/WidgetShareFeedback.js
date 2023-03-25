@@ -4,16 +4,36 @@ import Button from '../../Button/Button'
 import ModalHeading from '../../ModalHeading/ModalHeading'
 import Footer from '../../Footer/Footer'
 import TextAreaInput from '../../TextAreaInput/TextAreaInput'
+import { useEffect, useState } from 'react'
 
 export default function WidgetShareFeedback(props) {
+  const [feedbackText, setFeedbackText] = useState()
+  const [sendButtonClicked, setSendButtonClicked] = useState(false)
+
+  useEffect(() => {
+    if (sendButtonClicked) {
+      // Here is where we can send the signing request along with data from feedback text
+      console.log('submit button clicked state', sendButtonClicked, 'with feedback as', feedbackText)
+    } else {
+      console.log('Waiting for submit button to be clicked feedback text in useEffect', feedbackText)
+    }
+  }, [feedbackText, sendButtonClicked])
+
+  const onClickButtonFunction = () => {
+    setSendButtonClicked(true)
+    // Here is where we can send the signing request along with data from feedback text
+    console.log('Button Clicked!!')
+    // Make sure to make the widget disappear or unmount once the button click function and signing is done
+  }
+
   return (
     <>
     <div className='widget-container'>
         <CloseButton />
         <ModalHeading heading="Share Feedback" />
         <div className="buttons-container">
-            <TextAreaInput />
-            <Button buttonTitle="Send" />
+            <TextAreaInput setFeedbackText={setFeedbackText} />
+            <Button onClickButtonFunction={onClickButtonFunction} buttonTitle="Send" />
         </div>
         <Footer />
     </div>

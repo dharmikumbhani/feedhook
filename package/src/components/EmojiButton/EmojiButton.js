@@ -6,34 +6,17 @@ import neutralIconPath from '../../assets/neutral-icon.png'
 import happyIconPath from '../../assets/happy-icon.png'
 import struckIconPath from '../../assets/struck-icon.png'
 
-export default function xEmojiButton(props) {
+export default function EmojiButton(props) {
   const mappingEmotionToEmojiPath = {
-    angry: {
-      value: -2,
-      path: angryIconPath,
-    },
-    sad: {
-      value: -1,
-      path: sadIconPath,
-    },
-    neutral: {
-      value: 0,
-      path: neutralIconPath,
-    },
-    happy: {
-      value: 1,
-      path: happyIconPath,
-    },
-    struck: {
-      value: 1,
-      path: struckIconPath,
-    }
+    angry: {path: angryIconPath,},
+    sad: {path: sadIconPath},
+    neutral: {path: neutralIconPath},
+    happy: {path: happyIconPath},
+    struck: {path: struckIconPath}
   }
-  useEffect(() => {
-  }, [])
   return (
     <>
-    <button onClick={props.onClickButton} className="emoji-button" type="submit">
+    <button onClick={() => {props.setRatingValue(props.arrayObject.value);}} className="emoji-button" type="submit">
         <img src={mappingEmotionToEmojiPath[props.emotion].path} />
     </button>
     </>

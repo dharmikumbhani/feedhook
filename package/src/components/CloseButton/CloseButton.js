@@ -1,10 +1,10 @@
 import '../../css/styles.css'
 import CloseIcon from '../Icons/CloseIcon'
 
-export default function CloseButton() {
+export default function CloseButton(props) {
   return (
     <>
-     <button className="close-button" type="button">
+     <button onClick={props.onCloseButtonClicked} className="close-button" type="button">
         <CloseIcon />
     </button>
     </>

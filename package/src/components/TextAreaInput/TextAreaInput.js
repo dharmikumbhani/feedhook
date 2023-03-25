@@ -1,9 +1,9 @@
 import '../../css/styles.css'
 
-export default function TextAreaInput() {
+export default function TextAreaInput(props) {
   return (
     <>
-        <textarea className='text-area-input' type="text" name="myInput" placeholder="Feedback" />
+        <textarea onChange={(e)=> {props.setFeedbackText(e.target.value)}} className='text-area-input' type="text" name="myInput" placeholder="Feedback" />
     </>
   )
 }

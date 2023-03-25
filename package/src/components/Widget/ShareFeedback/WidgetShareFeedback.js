@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 export default function WidgetShareFeedback(props) {
   const [feedbackText, setFeedbackText] = useState()
   const [sendButtonClicked, setSendButtonClicked] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (sendButtonClicked) {
@@ -31,10 +32,16 @@ export default function WidgetShareFeedback(props) {
     <div className='widget-container'>
         <CloseButton />
         <ModalHeading heading="Share Feedback" />
-        <div className="buttons-container">
-            <TextAreaInput setFeedbackText={setFeedbackText} />
-            <Button onClickButtonFunction={onClickButtonFunction} buttonTitle="Send" />
-        </div>
+        {loading ? (
+          <div className='loading-container'>
+            <LoadingSVG />
+          </div>
+        ) : (
+          <div className="buttons-container">
+              <TextAreaInput setFeedbackText={setFeedbackText} />
+              <Button onClickButtonFunction={onClickButtonFunction} buttonTitle="Send" />
+          </div>
+        )}
         <Footer />
     </div>
     </>

@@ -111,10 +111,21 @@
     min-width: 350px;
     margin: var(--margin-s);
 }
-.widget-container > h1, .widget-container > .buttons-container {
+.widget-container > h1, .widget-container > .buttons-container, .widget-container > .loading-container {
     margin-bottom: calc(var(--margin-s)*2);
 }
 .page-helpful-widget > .buttons-container > button {
     margin-left: var(--margin-xs);
     margin-right: var(--margin-xs);
+}
+
+/* Loading */
+.loading-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

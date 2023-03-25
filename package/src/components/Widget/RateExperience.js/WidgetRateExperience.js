@@ -20,6 +20,7 @@ export default function WidgetRateExperience(props) {
         value: '2'},
     ]
     const [ratingValue, setRatingValue] = useState()
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Here is where we can send the signing request along with data from feedback text
@@ -31,13 +32,19 @@ export default function WidgetRateExperience(props) {
     <div className='widget-container'>
         <CloseButton />
         <ModalHeading heading="Rate Your Experience" />
-        <div className='flex-horizontal buttons-container'>
-            {arrayOfEmotions.map((arrayObject, key) =>
-                (
-                    <EmojiButton arrayObject={arrayObject} setRatingValue={setRatingValue} emotion={arrayObject.emotion} key={key} />
-                )
-            )}
-        </div>
+        {loading ? (
+            <div className='loading-container'>
+                <LoadingSVG />
+            </div>
+        ) : (
+            <div className='flex-horizontal buttons-container'>
+                {arrayOfEmotions.map((arrayObject, key) =>
+                    (
+                        <EmojiButton arrayObject={arrayObject} setRatingValue={setRatingValue} emotion={arrayObject.emotion} key={key} />
+                    )
+                )}
+            </div>
+        )}
         <Footer />
     </div>
     </>

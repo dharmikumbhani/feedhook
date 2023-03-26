@@ -1,5 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { Button } from "@tremor/react";
+import { ArrowRightIcon, RefreshIcon } from "@heroicons/react/outline";
 
 export default function Home() {
   return (
@@ -20,8 +22,13 @@ export default function Home() {
               priority
             />
           </div>
-          <h1 className="hero-text">Feedback the <br/> web3 way</h1>
-          <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your dapp</p>
+          <div className='main-center'>
+            <h1 className="hero-text">Feedback the <br/> web3 way</h1>
+            <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your dapp</p>
+            <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => console.log("clicked")}>
+              Get Started
+            </Button>
+          </div>
           <div className='code-callout'>
             <p className='code-p'>
               npm init{' '}

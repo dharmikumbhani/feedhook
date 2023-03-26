@@ -6,9 +6,26 @@
   padding: 2rem;
   min-height: 100vh;
 }
+.main-center {
+  /* margin-bottom: auto;
+  margin-top: auto; */
+  padding-top: 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.main-center > h1, .main-center > p {
+  margin-bottom: var(--margin-m);
+}
+.main-center > button {
+  margin: var(--margin-m)
+}
 
 .code-callout {
   max-width: var(--max-width);
+  position: absolute;
+  bottom: 5%;
   z-index: 2;
   font-family: var(--font-mono);
 }
@@ -50,10 +67,12 @@
 
 .hero-text {
   text-align: center;
+  line-height: 110%;
 }
 .subheading {
   font-size: var(--font-size-subheading);
   text-align: center;
+  line-height: 150%;
 }
 
 @keyframes rotate {

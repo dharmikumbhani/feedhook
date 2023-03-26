@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: 'ClashDisplay-Medium';
   src: url('/assets/fonts/ClashDisplay-Medium.woff2');
@@ -29,6 +33,7 @@
   --callout-border-rgb: 172, 175, 176;
   --font-size-heading: 64px;
   --font-size-subheading: 24px;
+  --margin-m: 12px;
 }
 @media only screen and (min-width: 720px) {
   :root{
@@ -67,5 +72,4 @@ h1 {
 p {
   font-family: var(--fonts-body);
   font-size: var(--font-size-bodycopy);
-  line-height: 150%;
 }

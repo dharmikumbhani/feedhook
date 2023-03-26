@@ -50,7 +50,7 @@ export default function WidgetRateExperience(props) {
           <div className="flex-horizontal buttons-container">
             {arrayOfEmotions.map((arrayObject, key) => (
               <EmojiButton
-                onClickButtonFunction={() => {setRatingValue(arrayObject.value)}}
+                onClickButtonFunction={() => {setRatingValue(arrayObject.value); props.callback(arrayObject.value)}}
                 arrayObject={arrayObject}
                 setRatingValue={setRatingValue}
                 emotion={arrayObject.emotion}

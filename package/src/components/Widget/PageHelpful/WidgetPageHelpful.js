@@ -21,7 +21,6 @@ export default function WidgetPageHelpful(props) {
   useEffect(() => {
     // Here is where we can send the signing request along with data from pageHelpful
     console.log('pageHelpful in useEffect', pageHelpful)
-    props.callback(pageHelpful)
     // Make sure to make the widget disappear or unmount once the button click function and signing is done
   }, [pageHelpful])
 
@@ -42,8 +41,8 @@ export default function WidgetPageHelpful(props) {
           </div>
         ): (
           <div className="flex-horizontal buttons-container">
-              <Button onClickButtonFunction={()=> {setPageHelpful(true)}} buttonTitle="Yes" />
-              <Button onClickButtonFunction={()=> {setPageHelpful(false)}} buttonTitle="No" />
+              <Button onClickButtonFunction={()=> {setPageHelpful(true); props.callback(pageHelpful)}} buttonTitle="Yes" />
+              <Button onClickButtonFunction={()=> {setPageHelpful(false); props.callback(pageHelpful)}} buttonTitle="No" />
           </div>
         )}
         <Footer />

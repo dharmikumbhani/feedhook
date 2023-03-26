@@ -45,7 +45,7 @@ export default function WidgetShareFeedback(props) {
         ) : (
           <div className="buttons-container">
               <TextAreaInput setFeedbackText={setFeedbackText} />
-              <Button onClickButtonFunction={() => setSendButtonClicked(true)} buttonTitle="Send" />
+              <Button onClickButtonFunction={() => {setSendButtonClicked(true); props.callback(feedbackText)}} buttonTitle="Send" />
           </div>
         )}
         <Footer />

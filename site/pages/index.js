@@ -13,10 +13,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className='main'>
+        <div className="hero-ui-image-container">
+            <Image
+              src="/hero-ui.png"
+              alt="Feedhook Hero UI Image Logo"
+              width={1920}
+              height={1080}
+              priority
+            />
+        </div>
           <div className='logo-gradient'>
             <Image
               src="/feedhook.svg"
-              alt="Vercel Logo"
+              alt="Feedhook Logo"
               width={300}
               height={200}
               priority
@@ -25,13 +34,13 @@ export default function Home() {
           <div className='main-center'>
             <h1 className="hero-text">Feedback the <br/> web3 way</h1>
             <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your dapp</p>
-            <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => console.log("clicked")}>
+            <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/registration"}>
               Get Started
             </Button>
           </div>
           <div className='code-callout'>
             <p className='code-p'>
-              npm init{' '}
+              npm install{' '}
               <code className='code'>feedhook</code>
             </p>
           </div>

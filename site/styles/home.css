@@ -21,7 +21,14 @@
 .main-center > button {
   margin: var(--margin-m)
 }
-
+.hero-ui-image-container {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
 .code-callout {
   max-width: var(--max-width);
   position: absolute;
@@ -47,6 +54,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-top: calc(var(--margin-m)*4);
 }
 
 .logo-gradient::after {
@@ -74,7 +82,31 @@
   text-align: center;
   line-height: 150%;
 }
-
+.text-input-label {
+  text-align: left;
+  margin-right: auto;
+}
+.input-group {
+  max-width: 600px;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--background-end-rgb)
+    )
+    var(--background-start-rgb);
+}
+.input-group > label {
+  margin-bottom: var(--margin-s);
+}
+.input-group > div {
+  margin-bottom: var(--margin-m);
+  min-width: 400px;
+}
 @keyframes rotate {
   from {
     transform: rotate(360deg);

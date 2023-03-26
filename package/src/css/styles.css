@@ -1,0 +1,154 @@
+@import url(./reset.css);
+@import url(./globals.css);
+.flex-horizontal{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* BUTTONS */
+.cta-widget-button {
+    width: 100%;
+    border-radius: var(--border-radius-small);
+    background-color: var(--light-secondary1);
+    padding: var(--padding-button);
+    color: white;
+    font-family: var(--fonts-body);
+    font-weight: var(--font-weight-body);
+    /* margin-inline: var(--margin-xs); */
+}
+
+/* TEXT AREA INPUT */
+.text-area-input {
+    border-radius: var(--border-radius-medium);
+    width: 100%;
+    padding: var(--padding-button);
+    height: 100px;
+    border: 2px solid var(--light-inputs);
+    text-align: start;
+    font-family: var(--fonts-body);
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-body);
+    margin-bottom: var(--margin-xs);
+    box-sizing: border-box;
+}
+
+/* EMOJI BUTTON */
+.emoji-button {
+    width: 52px;
+    height: 52px;
+    padding: var(--padding-button);
+    background-color: rgb(236, 236, 236, 0.5);
+    border-radius: var(--border-radius-small);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: var(--margin-xs);
+}
+.emoji-button > img {
+    width: 100%;
+}
+.emoji-button:hover {
+    background-color: rgb(236, 236, 236, 0.7);
+}
+.emoji-button:hover > img {
+    scale: 1.05;
+    transition: all 0.5;
+}
+
+/* Close Button */
+.close-button {
+    border-radius: var(--border-radius-full);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+.close-button:hover {
+    background-color: rgb(236, 236, 236, 0.5);
+    transition: all 0.1s ease-out;
+}
+
+/* Modal heading */
+.modal-heading {
+    font-family: var(--fonts-body);
+    font-weight: var(--font-weight-headings);
+    font-size: var(--font-size-m);
+    text-align: center;
+}
+
+/* Footer */
+.footer-text {
+    /* margin-left: var(--margin-xs); */
+    opacity: var(--opacity-50);
+    font-weight: var(--font-weight-body);
+    font-size: var(--font-size-xs);
+}
+.feedhook-logo-container {
+    width: 16px;
+    opacity: var(--opacity-80);
+    box-sizing: border-box;
+    padding: 2px;
+    margin-right: 2px;
+}
+/* Successful Container */
+.successful-container > p {
+    color: #16a34a;
+    font-weight: var(--font-weight-body);
+    text-align: center;
+}
+
+/* Widget */
+.widget-container {
+    position: relative;
+    background-color: white;
+    padding: 16px 16px 8px 16px;
+    box-shadow: var(--box-shadow-black);
+    width: fit-content;
+    border-radius: var(--border-radius-medium);
+    min-width: 350px;
+    margin: var(--margin-s);
+}
+.widget-container-modal{
+    position: absolute;
+    left: 50%;
+    bottom: 2%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+}
+/* .widget-backdrop {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
+    position: absolute;
+    z-index: 999;
+} */
+.close-widget{
+    display: none;
+}
+.widget-container > h1, .widget-container > .buttons-container, .widget-container > .loading-container, .widget-container > .successful-container {
+    margin-bottom: calc(var(--margin-s)*2);
+}
+.page-helpful-widget > .buttons-container > button {
+    margin-left: var(--margin-xs);
+    margin-right: var(--margin-xs);
+}
+
+/* Loading */
+.loading-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

@@ -67,7 +67,5 @@ const YourApp = () => {
 ## API Reference
 | Props | Type | Description | Options |
 | --- | --- | --- | --- |
-| widgetType *required | string | Decide what kind of widget this is? | 1. pageHelpful
-2. rateExpereince
-3. shareFeedback |
+| widgetType *required | string | Decide what kind of widget this is? | 1. pageHelpful 2. rateExpereince 3. shareFeedback |
 | callback | function |  |  |

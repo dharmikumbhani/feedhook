@@ -19,8 +19,9 @@ export default function WidgetPageHelpful(props) {
   }
 
   useEffect(() => {
-    // Here is where we can send the signing request along with data from feedback text
+    // Here is where we can send the signing request along with data from pageHelpful
     console.log('pageHelpful in useEffect', pageHelpful)
+    props.callback(pageHelpful)
     // Make sure to make the widget disappear or unmount once the button click function and signing is done
   }, [pageHelpful])
 

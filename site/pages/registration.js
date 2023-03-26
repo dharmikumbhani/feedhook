@@ -31,10 +31,10 @@ export default function Registration() {
             <div className='input-group'>
                 {walletConnected ? (
                     <>
-                        <label className="text-input-label">Dapp URL</label>
-                        <TextInput icon={GlobeAltIcon} placeholder="Dapp URL" />
-                        <label className="text-input-label">Dapp contract address</label>
-                        <TextInput icon={GlobeAltIcon} placeholder="Dapp Smart Contract Address" />
+                        <label className="text-input-label">DApp URL</label>
+                        <TextInput icon={GlobeAltIcon} placeholder="DApp URL" />
+                        <label className="text-input-label">DApp contract address</label>
+                        <TextInput icon={GlobeAltIcon} placeholder="DApp Smart Contract Address" />
                         <label className="text-input-label">Version</label>
                         <TextInput icon={GlobeAltIcon} placeholder="Version" />
                         <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/embedding"}>

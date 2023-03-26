@@ -33,7 +33,7 @@ export default function Home() {
           </div>
           <div className='main-center'>
             <h1 className="hero-text">Feedback the <br/> web3 way</h1>
-            <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your dapp</p>
+            <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your DApp, DAOs or protocol</p>
             <Flex className='margin-homepage-buttons' justifyContent='center'>
               <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/registration"}>
                 Get Started

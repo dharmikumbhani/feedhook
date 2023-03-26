@@ -74,22 +74,4 @@ abstract contract AttestationVerifier is EIP712 {
 
             return _attester;
         }
-
-    /**
-     * @dev Submit off-chain attestations on-chain (WIP)
-     * @param _requests The requests to submit
-     */
-    
-    // function _submitAttestations(OffChainAttestationRequest[] calldata _requests) external {
-    //     for (uint256 i = 0; i < _requests.length; i++) {
-    //         OffChainAttestationRequest calldata request = _requests[i];
-    //         _verifyAttestation(request.attestationData, request.signature, request.attester);
-
-    //         // Delegated Attestation Call to Attestation Station as attester will not be the msg.sender
-    //         // Create Schema DelegatedAttestationCall. How to create a universal schema for this? Such all schema can be submitted by a delegate.
-    //         // Add boolean delegate
-    //         // Add address delegateAddr
-    //         // Can schema creator change delegate address?
-    //     }
-    // }
 }

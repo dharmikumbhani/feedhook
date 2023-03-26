@@ -188,4 +188,6 @@ contract DelegatedTest is Test {
         emit SubmittedDelegatedSchemaAttestation(request.about, request.key, request.delegate, request.data, request.attester);
         attestationStationMiddleware.submitDelegatedSchemaAttestation(request);
     }
+
+    // TODO: Test Failure for submitDelegatedSchemaAttestation
 }

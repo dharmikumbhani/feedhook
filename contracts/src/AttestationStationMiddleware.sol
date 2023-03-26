@@ -144,11 +144,77 @@ contract AttestationStationMiddleware is AttestationVerifier{
             _submitDelegatedSchemaAttestation(_requests);
     }
 
+    // TODO: Add a function to submit multiple delegated schema attestations.
+
     // verifyAttestation
     function verifyAttestation(DelegatedSchemaAttestationRequest calldata _request) external returns (bool) {
         // Verify the signature.
         _verifyAttestation(_request);
         return true;
+    }
+
+    // getAttestations Multicall for getting multiple attestations from AttestationStation
+    function getAttestations(AttestationRequestData[] calldata _requests) external returns (bytes[] memory) {
+        bytes[] memory _responses = new bytes[](_requests.length);
+        for(uint256 i = 0; i < _requests.length; ) {
+            (bool success, bytes memory response) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attestations(address,address,bytes32)", _requests[i].attester, _requests[i].about, _requests[i].key));
+            if(!success) {
+                revert AttestationRetrievalFailed();
+            }
+            _responses[i] = abi.decode(response, (bytes));
+            unchecked {
+                ++i;
+            }
+        }
+        return _responses;
+    }
+
+    /**
+     * @dev Get schema attestations from AttestationStation
+     * @param _request array of AttestationRequestData
+     * @dev AttestationRequestData.attester will be the delegate's address if attestation was off-chain before.
+     * @return bytes array of bytes
+     */
+    function _getSchemaAttestations(AttestationRequestData[] memory _request) private returns (bytes[] memory) {
+        bytes[] memory _responses = new bytes[](_request.length);
+        for(uint256 i = 0; i < _request.length; ) {
+            (bool success, bytes memory response) = ATTESTATION_STATION.delegatecall(abi.encodeWithSignature("attestations(address,address,bytes32)", _request[i].attester, _request[i].about, _request[i].key));
+            if(!success) {
+                revert AttestationRetrievalFailed();
+            }
+            _responses[i] = abi.decode(response, (bytes));
+            unchecked {
+                ++i;
+            }
+        }
+        return _responses;
+    }
+
+    function getSchemaAttestation(AttestationRequestData calldata _request) external returns (SchemaAttestationData memory) {
+        AttestationRequestData[] memory _requests = new AttestationRequestData[](1);
+        _requests[0] = _request;
+        bytes[] memory _responses = _getSchemaAttestations(_requests);
+        (bytes32 schemaUID, bytes memory data, address attester) = abi.decode(_responses[0], (bytes32, bytes, address));
+        // data should further be decoded.
+        return SchemaAttestationData({
+            uid: schemaUID,
+            data: data,
+            attester: attester,
+            about: _request.about,
+            key: _request.key
+        });
+    }
+
+
+    /**
+     * @dev Get multiple schema attestations from AttestationStation
+     * @param _requests array of AttestationRequestData
+     * @return responses - array of bytes
+     * @dev Decode bytes like this abi.decode(_responses[0], (bytes32, bytes, address)); where bytes32 is the schemaUID, bytes is the data and address is the attester.
+     */
+    function getMultipleSchemaAttestations(AttestationRequestData[] calldata _requests) external returns (bytes[] memory) {
+        bytes[] memory _responses = _getSchemaAttestations(_requests);
+        return _responses;
     }
     
 

@@ -60,7 +60,7 @@ struct AttestationRequestData {
     address attester;
 }
 struct SchemaAttestationData {
-    bytes32 schemaUID;
+    bytes32 uid;
     address about;
     bytes32 key;
     bytes data;

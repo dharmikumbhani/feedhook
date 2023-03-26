@@ -105,7 +105,7 @@ contract SchemaRegistry is ISchemaRegistry {
         bytes memory value = _getSchemaAttestation(_attester, _about, _key);
         (bytes32 schemaUID, bytes memory data, address attester) = abi.decode(value, (bytes32, bytes, address));
         return SchemaAttestationData({
-            schemaUID: schemaUID,
+            uid: schemaUID,
             about: _about,
             key: _key,
             data: data,

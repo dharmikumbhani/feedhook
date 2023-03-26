@@ -189,5 +189,67 @@ contract DelegatedTest is Test {
         attestationStationMiddleware.submitDelegatedSchemaAttestation(request);
     }
 
+    // Test submitMultipleDelegatedSchemaAttestations: Emit
+    // Command: forge test --match-test test_submitMultipleDelegatedSchemaAttestations
+    function test_submitMultipleDelegatedSchemaAttestations() public {
+        // Register a schema
+        string memory schema = "{text: string, number: uint256}";
+        address resolver = alice;
+        bool revocable = true;
+        SchemaRecord memory data = SchemaRecord({
+            uid: bytes32(0),
+            schema: schema,
+            resolver: resolver,
+            revocable: revocable,
+            delegatable: true,
+            delegate: delegateAddr
+        });
+        bytes32 schemaUid = schemaRegistry.registerSchema(data);
+        DelegatedSchemaAttestationRequest[] memory requests = new DelegatedSchemaAttestationRequest[](10);
+        for(uint256 i = 0; i < 10; i++) {
+            // Generate new private key
+            uint256 newKey = block.timestamp + i;
+            address newSigner = vm.addr(newKey);
+
+            // Sign the message with newSigner's private key
+            uint256 nonce = attestationStationMiddleware.getNonce(newSigner);
+            
+            atstData memory digestData = atstData({
+                about: alice,
+                key: bytes32("key"),
+                val: "{text: Hello World!, number: 123}", // Follows Schema Format
+                delegate: delegateAddr
+            });
+            // Digest
+            bytes32 digest = sigUtils.getTypedDataHash(digestData, nonce);
+            // Sign 
+            (uint8 v, bytes32 r, bytes32 s) = vm.sign(newKey, digest);
+
+            Signature memory signature = Signature({
+                v: v,
+                r: r,
+                s: s
+            });
+
+            // Delegated Attestation Request
+            DelegatedSchemaAttestationRequest memory request = DelegatedSchemaAttestationRequest({
+                uid: schemaUid,
+                about: alice,
+                key: bytes32("key"),
+                data: "{text: Hello World!, number: 123}", // Follows Schema Format
+                delegate: delegateAddr,
+                attester: newSigner, // Now newSigner has to sign the message to approve the delegate.
+                signature: signature
+            });
+            requests[i] = request;
+        }
+
+        // Submit the attestation
+        vm.prank(delegateAddr); // Called by delegate else it'll fail
+        vm.expectEmit(true, true, true, false, address(attestationStationMiddleware));
+        emit SubmittedDelegatedSchemaAttestation(requests[0].about, requests[0].key, requests[0].delegate, requests[0].data, requests[0].attester);
+        attestationStationMiddleware.submitMultipleDelegatedSchemaAttestations(requests);
+    }
+
     // TODO: Test Failure for submitDelegatedSchemaAttestation
 }

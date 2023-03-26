@@ -144,7 +144,14 @@ contract AttestationStationMiddleware is AttestationVerifier{
             _submitDelegatedSchemaAttestation(_requests);
     }
 
-    // TODO: Add a function to submit multiple delegated schema attestations.
+    /**
+     * @dev submitMultipleDelegatedSchemaAttestations
+     * @param _requests Array of DelegatedSchemaAttestationRequest
+     */
+    function submitMultipleDelegatedSchemaAttestations(DelegatedSchemaAttestationRequest[] calldata _requests) external {
+        // Submit the attestation to AttestationStation.sol
+        _submitDelegatedSchemaAttestation(_requests);
+    }
 
     // verifyAttestation
     function verifyAttestation(DelegatedSchemaAttestationRequest calldata _request) external returns (bool) {

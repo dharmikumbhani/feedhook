@@ -6,9 +6,14 @@
   padding: 2rem;
   min-height: 100vh;
 }
+.main-reg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 125px);
+}
 .main-center {
-  /* margin-bottom: auto;
-  margin-top: auto; */
   padding-top: 7rem;
   display: flex;
   flex-direction: column;
@@ -88,7 +93,8 @@
 }
 .input-group {
   max-width: 600px;
-  padding: 1rem;
+  min-width: 400px;
+  padding: 2rem;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -99,14 +105,36 @@
       var(--background-end-rgb)
     )
     var(--background-start-rgb);
+  transform: translateY(-125px);
 }
 .input-group > label {
   margin-bottom: var(--margin-s);
 }
 .input-group > div {
   margin-bottom: var(--margin-m);
-  min-width: 400px;
 }
+.input-group > p {
+  text-align: center;
+  margin-bottom: var(--margin-m);
+  font-weight: 700;
+}
+.input-group > div > button{
+  margin-left: auto;
+  margin-right: auto;
+}
+.connect-button-div {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+.remove-border-color{
+  border: none;
+}
+.margin-homepage-buttons > button{
+  margin: var(--margin-m);
+}
+
 @keyframes rotate {
   from {
     transform: rotate(360deg);

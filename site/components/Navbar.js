@@ -1,7 +1,9 @@
 import Image from 'next/image'
+import { useEffect } from 'react'
 import {ConnectButton} from '@rainbow-me/rainbowkit'
+import {useAccount} from 'wagmi'
 
-export default function NavBar() {
+export default function NavBar(props) {
   return (
     <>
     <nav className='flex-row '>
@@ -17,7 +19,11 @@ export default function NavBar() {
             </a>
         </div>
         <div className="user-loggedIn">
-          <ConnectButton chainStatus="icon" showBalance={false} />
+          { props.isConnected ? (
+            <ConnectButton chainStatus="icon" showBalance={false} />
+          ) : (
+            <></>
+          )}
         </div>
     </nav>
     </>

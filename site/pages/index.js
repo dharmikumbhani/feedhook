@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Button } from "@tremor/react";
+import { Button, Flex, Card } from "@tremor/react";
 import { ArrowRightIcon, RefreshIcon } from "@heroicons/react/outline";
 
 export default function Home() {
@@ -34,9 +34,14 @@ export default function Home() {
           <div className='main-center'>
             <h1 className="hero-text">Feedback the <br/> web3 way</h1>
             <p className='subheading'>Embed widget and start taking feedback <br/> attestations for your dapp</p>
-            <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/registration"}>
-              Get Started
-            </Button>
+            <Flex className='margin-homepage-buttons' justifyContent='center'>
+              <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/registration"}>
+                Get Started
+              </Button>
+              <Button variant='light' icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="https://www.npmjs.com/package/feedhook"}>
+                View Docs
+              </Button>
+            </Flex>
           </div>
           <div className='code-callout'>
             <p className='code-p'>

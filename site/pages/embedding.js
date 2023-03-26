@@ -4,6 +4,7 @@ import { Button } from "@tremor/react";
 import { ArrowRightIcon, GlobeAltIcon, RefreshIcon, SearchIcon } from "@heroicons/react/outline";
 import NavBar from '@/components/Navbar';
 import { TextInput } from '@tremor/react';
+import { Card } from '@mintlify/components';
 
 
 export default function Embedding() {
@@ -16,10 +17,16 @@ export default function Embedding() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar />
-      <main className='main'>
+      <main className='max-w-screen-md m-auto'>
         <div>
             <p>Congratulations! on setting up the widget</p>
         </div>
+        <Card title="Click on me" icon="link" href="/components/card-group">
+          This is how you use a card with an icon and a link. Clicking on this card brings you to the Card Group page.
+        </Card>
+        ```javascript
+        const hello = "world";
+        ```
       </main>
     </>
   )

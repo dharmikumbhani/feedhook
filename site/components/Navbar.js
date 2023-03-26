@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import {ConnectButton} from '@rainbow-me/rainbowkit'
 
 export default function NavBar() {
   return (
@@ -16,6 +17,7 @@ export default function NavBar() {
             </a>
         </div>
         <div className="user-loggedIn">
+          <ConnectButton chainStatus="icon" showBalance={false} />
         </div>
     </nav>
     </>

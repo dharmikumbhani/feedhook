@@ -17,11 +17,11 @@ export default function Registration() {
       <NavBar />
       <main className='main'>
         <div className='input-group'>
-            <label class="text-input-label">Dapp URL</label>
+            <label className="text-input-label">Dapp URL</label>
             <TextInput icon={GlobeAltIcon} placeholder="Dapp URL" />
-            <label class="text-input-label">Dapp contract address</label>
+            <label className="text-input-label">Dapp contract address</label>
             <TextInput icon={GlobeAltIcon} placeholder="Dapp Smart Contract Address" />
-            <label class="text-input-label">Version</label>
+            <label className="text-input-label">Version</label>
             <TextInput icon={GlobeAltIcon} placeholder="version" />
             <Button icon={ArrowRightIcon} size="sm" iconPosition='right' onClick={() => location.href="/embedding"}>
                 Submit and Embed Widget

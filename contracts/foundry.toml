@@ -5,3 +5,7 @@ libs = ['lib']
 solc = '0.8.15'
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
+
+[rpc_endpoints]
+goerli = "${RPC_OP_GOERLI}"
+mainnet = "${RPC_OP_MAINNET}"

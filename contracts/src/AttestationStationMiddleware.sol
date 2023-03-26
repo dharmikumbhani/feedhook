@@ -33,9 +33,9 @@ contract AttestationStationMiddleware is AttestationVerifier{
      */
     event SubmittedDelegatedSchemaAttestation(address indexed about, bytes32 indexed key, address indexed delegate, bytes data, address attester);
 
-    constructor(address _atst, ISchemaRegistry _schemaRegistry) AttestationVerifier("Attestation Station Middleware", "0.0.1") {
+    constructor(address _atst, address _schemaRegistry) AttestationVerifier("Attestation Station Middleware", "0.0.1") {
         ATTESTATION_STATION = _atst;
-        SCHEMA_REGISTRY = _schemaRegistry;
+        SCHEMA_REGISTRY = ISchemaRegistry(_schemaRegistry);
     }
     // Functions
     // TODO: Remove this, was only needed for testing. Users can directly call AttestationStation.sol

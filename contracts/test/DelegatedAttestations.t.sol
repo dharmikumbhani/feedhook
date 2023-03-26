@@ -42,7 +42,7 @@ contract DelegatedTest is Test {
         schemaRegistry = new SchemaRegistry(address(atst));
 
         // Deploy AttestationVerifier
-        attestationStationMiddleware = new AttestationStationMiddleware(address(atst), schemaRegistry);
+        attestationStationMiddleware = new AttestationStationMiddleware(address(atst), address(schemaRegistry));
         sigUtils = new SigUtils(attestationStationMiddleware.getDomainSeparator());
     }
 

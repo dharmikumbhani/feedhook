@@ -33,7 +33,7 @@ contract AttestationStationMiddlewareTest is Test {
         schemaRegistry = new SchemaRegistry(address(attestationStation));
 
         // Deploy AttestationStationMiddleware
-        attestationStationMiddleware = new AttestationStationMiddleware(address(attestationStation), schemaRegistry);
+        attestationStationMiddleware = new AttestationStationMiddleware(address(attestationStation), address(schemaRegistry));
     }
 
     // Test submitSchemaAttestation: Event Emit

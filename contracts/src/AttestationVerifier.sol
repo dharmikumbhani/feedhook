@@ -19,16 +19,14 @@ struct Signature {
 }
 
 abstract contract AttestationVerifier is EIP712 {
-    // keccak256("Attestation(address about,bytes32 key,bytes value)")
-    bytes32 private constant ATTESTATION_TYPEHASH = keccak256("Attestation(address about,bytes32 key,bytes value,address delegate,uint256 nonce)");
+    // keccak256("Attestation(address about,bytes32 key,bytes value,address delegate,uint256 nonce)")
+    bytes32 private constant ATTESTATION_TYPEHASH = 0x2812820e950af8bd419c6b4c2562dab02e487099f15fa02ca847d16c1a9af11f;
     
     // Replay protection
     mapping(address => uint256) private _nonces;
     
 
-    constructor(string memory name, string memory version) EIP712(name, version) {
-
-    }
+    constructor(string memory name, string memory version) EIP712(name, version) {}
 
     function getDomainSeparator() public view returns (bytes32) {
         return _domainSeparatorV4();
@@ -44,8 +42,9 @@ abstract contract AttestationVerifier is EIP712 {
 
 
     /**
-     * @dev private verification function
+     * @dev internal verification function for verifying signed off-chain attestations
      * @param _attestation The attestation to verify
+     * @dev _attestation.delegate should be same as the delegate in the schemaRecord and also the same while signing the message else signature will be invalid.
      */
     function _verifyAttestation(
         DelegatedSchemaAttestationRequest memory _attestation) internal returns (address) {

@@ -46,8 +46,6 @@ struct DelegatedSchemaAttestationRequest {
     Signature signature; // The signature of the attester.
 }
 
-
-
 struct AttestationData {
     address about;
     bytes32 key;
@@ -92,19 +90,4 @@ interface ISchemaRegistry {
      * @return record The schema record.
      */
     function getSchema(bytes32 uid) external view returns (SchemaRecord memory record);
-    
-    /**
-     * @notice Submits a schema attestation to AttestationStation.sol
-     * @param _request The schema attestation request.
-     */
-    function submitSchemaAttestation(SchemaAttestationRequest calldata _request) external;
-
-    /**
-     * @notice Gets a attestation from AttestationStation.sol, converts it to a SchemaAttestation struct and returns it.
-     * @param _attester The address of the attester.
-     * @param _about The address of the subject of the attestation.
-     * @param _key The key of the attestation.
-     * @return The schema attestation.
-     */
-    function getSchemaAttestation(address _attester, address _about, bytes32 _key) external returns (SchemaAttestationData memory);
 }

@@ -85,8 +85,8 @@ contract DelegatedTest is Test {
             schema: schema,
             resolver: resolver,
             revocable: revocable,
-            delegatable: true,
-            delegate: delegateAddr
+            delegatable: false,
+            delegate: address(0)
         });
 
         bytes32 schemaUid = schemaRegistry.registerSchema(data);
@@ -94,11 +94,14 @@ contract DelegatedTest is Test {
         // Sign the message with bob's private key
         uint256 nonce = attestationStationMiddleware.getNonce(bob);
         
+        /**
+         * @dev If schema is not delagatable then delegate should be address(0) while signing the message.
+         */
         atstData memory digestData = atstData({
             about: alice,
             key: bytes32("key"),
             val: "{text: Hello World!, number: 123}", // Follows Schema Format
-            delegate: delegateAddr
+            delegate: address(0)
         });
         // Digest
         bytes32 digest = sigUtils.getTypedDataHash(digestData, nonce);
@@ -118,7 +121,7 @@ contract DelegatedTest is Test {
             about: alice,
             key: bytes32("key"),
             data: "{text: Hello World!, number: 123}", // Follows Schema Format
-            delegate: delegateAddr,
+            delegate: address(0),
             signature: signature,
             attester: bob
         });
@@ -127,7 +130,9 @@ contract DelegatedTest is Test {
         assertEq(request.data, digestData.val);
 
         // Verify Attestation
-        assertEq(attestationStationMiddleware.verifyAttestation(request), true);
+        vm.prank(alice);
+        bool verified = attestationStationMiddleware.verifyAttestation(request);
+        assertEq(verified, true);
         assertEq(attestationStationMiddleware.getNonce(bob), 1);
     }
 
